@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESSA PRICE_LIST</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 24px;
+        }
+        .upload-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border: 2px dashed #ddd;
+        }
+        .upload-area {
+            text-align: center;
+            padding: 20px 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .upload-area:hover {
+            background-color: #f0f0f0;
+        }
+        .upload-area i {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        .upload-area h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .upload-area p {
+            font-size: 13px;
+            margin: 3px 0;
+        }
+        .file-input {
+            display: none;
+        }
+        .file-info {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        .db-info {
+            margin-top: 10px;
+            padding: 8px;
+            background-color: #e7f3ff;
+            border-radius: 4px;
+            display: none;
+            font-size: 13px;
+        }
+        .db-info h4 {
+            margin-bottom: 3px;
+            color: #0066cc;
+            font-size: 14px;
+        }
+        .db-info p {
+            margin: 2px 0;
+            font-size: 12px;
+        }
+        .search-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            display: none;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+            font-size: 14px;
+        }
+        .field-note {
+            font-size: 11px;
+            color: #888;
+            margin-top: 2px;
+            font-style: italic;
+        }
+        input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+            grid-column: 1 / -1;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4a6fa5;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #3a5a80;
+        }
+        .reset-btn {
+            background-color: #6c757d;
+        }
+        .reset-btn:hover {
+            background-color: #545b62;
+        }
+        .results {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+        .status-message {
+            text-align: center;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ESSA PRICE_LIST</h1>
+        
+        <div class="upload-section">
+            <div class="upload-area" id="uploadArea">
+                <div>
+                    <i>📁</i>
+                    <h3>SQLite 데이터베이스 파일 업로드</h3>
+                    <p>클릭하거나 파일을 드래그하여 업로드하세요</p>
+                    <p class="file-info">지원 형식: .db, .sqlite, .sqlite3</p>
+                </div>
+                <input type="file" id="fileInput" class="file-input" accept=".db,.sqlite,.sqlite3">
+            </div>
+            <div id="statusMessage"></div>
+            <div id="dbInfo" class="db-info"></div>
+        </div>
+        
+        <div class="search-form" id="searchForm">
+            <div class="form-group">
+                <label for="p_name">상품명</label>
+                <div class="field-note">예: 워너비, 티모시 등</div>
+                <input type="text" id="p_name" placeholder="상품명을 입력하세요">
+            </div>
+            
+            <div class="form-group">
+                <label for="size">사이즈</label>
+                <div class="field-note">예: 1인, 2인, 3인 등</div>
+                <input type="text" id="size" placeholder="사이즈를 입력하세요">
+            </div>
+            
+            <div class="form-group">
+                <label for="size_option">사이즈 옵션</label>
+                <div class="field-note">예: 코너형, 카우치형 등</div>
+                <input type="text" id="size_option" placeholder="사이즈 옵션">
+            </div>
+            
+            <div class="form-group">
+                <label for="material">소재</label>
+                <div class="field-note">예: 가죽, 패브릭 등</div>
+                <input type="text" id="material" placeholder="소재를 입력하세요">
+            </div>
+            
+            <div class="form-group">
+                <label for="fabric">원단</label>
+                <div class="field-note">예: 카시미라, 리브 등</div>
+                <input type="text" id="fabric" placeholder="원단을 입력하세요">
+            </div>
+            
+            <div class="form-group">
+                <label for="function">기능</label>
+                <div class="field-note">예: 스윙, 헤드, 리프트 등</div>
+                <input type="text" id="function" placeholder="기능을 입력하세요">
+            </div>
+            
+            <div class="form-group">
+                <label for="stool">스툴 포함</label>
+                <div class="field-note">예: 포함, 일반</div>
+                <input type="text" id="stool" placeholder="스툴 포함 입력">
+            </div>
+            
+            <div class="form-group">
+                <label for="style">스타일</label>
+                <div class="field-note">예: 콤비, 일반</div>
+                <input type="text" id="style" placeholder="스타일을 입력하세요">
+            </div>
+            
+            <div class="form-group">
+                <label for="leather_option">가죽 옵션</label>
+                <div class="field-note">예: 전면, 전체</div>
+                <input type="text" id="leather_option" placeholder="가죽 옵션">
+            </div>
+            
+            <div class="form-group">
+                <label for="event_product">행사 제품</label>
+                <div class="field-note">예: 정상, 행사</div>
+                <input type="text" id="event_product" placeholder="행사 제품 입력">
+            </div>
+            
+            <div class="buttons">
+                <button id="search-btn">검색</button>
+                <button id="reset-btn" class="reset-btn">초기화</button>
+            </div>
+        </div>
+        
+        <div class="loading" id="loading">
+            🔍 검색 중입니다...
+        </div>
+        
+        <div class="results">
+            <h2>검색 결과</h2>
+            <div id="results-container"></div>
+        </div>
+    </div>
+
+    <script>
+        // 상수 및 설정
+        const CONFIG = {
+            SQLJSCDN: 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0',
+            ALLOWED_EXTENSIONS: /\.(db|sqlite|sqlite3)$/i,
+            FIELD_MAPPING: {
+                p_name: ['P_NAME', '상품명', 'PRODUCT_NAME', 'NAME'],
+                size: ['SIZE', '사이즈'],
+                size_option: ['SIZE 옵션', 'SIZE_OPTION', '사이즈옵션', '사이즈 옵션', 'SIZEOPTION'],
+                material: ['MATERIAL', '소재'],
+                fabric: ['FABRIC', '원단'],
+                function: ['FUNCTION', '기능'],
+                stool: ['스툴포함', 'STOOL', '스툴', '스툴 포함', 'STOOL 포함', 'STOOL포함'],
+                style: ['STYLE', '스타일'],
+                leather_option: ['가죽옵션', 'LEATHER_OPTION', '가죽 옵션', 'LEATHEROPTION'],
+                event_product: ['행사제품', '행사 제품', 'EVENT_PRODUCT', 'EVENT', '이벤트']
+            },
+            DISPLAY_COLUMNS: [
+                { keys: ['품목코드', 'PRODUCT_CODE', 'CODE', '코드'], label: '품목코드' },
+                { keys: ['상품명', 'P_NAME', 'PRODUCT_NAME', 'NAME'], label: '상품명' },
+                { keys: ['사이즈', 'SIZE'], label: '사이즈' },
+                { keys: ['판매가', 'PRICE', 'SALE_PRICE', '가격'], label: '판매가' },
+                { keys: ['행사제품', '행사 제품', 'EVENT_PRODUCT', 'EVENT', '이벤트'], label: '행사제품' }
+            ]
+        };
+
+        // 앱 상태
+        const state = {
+            db: null,
+            fileName: '',
+            tableInfo: null
+        };
+
+        // DOM 요소 캐싱
+        const DOM = {
+            uploadArea: document.getElementById('uploadArea'),
+            fileInput: document.getElementById('fileInput'),
+            statusMessage: document.getElementById('statusMessage'),
+            dbInfo: document.getElementById('dbInfo'),
+            searchForm: document.getElementById('searchForm'),
+            searchBtn: document.getElementById('search-btn'),
+            resetBtn: document.getElementById('reset-btn'),
+            loading: document.getElementById('loading'),
+            resultsContainer: document.getElementById('results-container')
+        };
+
+        // 이벤트 리스너 초기화
+        function initEventListeners() {
+            DOM.uploadArea.addEventListener('click', () => DOM.fileInput.click());
+            DOM.uploadArea.addEventListener('dragover', handleDragOver);
+            DOM.uploadArea.addEventListener('dragleave', handleDragLeave);
+            DOM.uploadArea.addEventListener('drop', handleDrop);
+            DOM.fileInput.addEventListener('change', handleFileSelect);
+            DOM.searchBtn.addEventListener('click', searchProducts);
+            DOM.resetBtn.addEventListener('click', resetForm);
+        }
+
+        // 드래그 앤 드롭 핸들러
+        function handleDragOver(e) {
+            e.preventDefault();
+            DOM.uploadArea.style.backgroundColor = '#f0f0f0';
+        }
+
+        function handleDragLeave() {
+            DOM.uploadArea.style.backgroundColor = '';
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            DOM.uploadArea.style.backgroundColor = '';
+            const file = e.dataTransfer.files[0];
+            if (file) handleFileUpload(file);
+        }
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) handleFileUpload(file);
+        }
+
+        // 파일 업로드 처리
+        function handleFileUpload(file) {
+            if (!CONFIG.ALLOWED_EXTENSIONS.test(file.name)) {
+                showStatus('SQLite 데이터베이스 파일(.db, .sqlite, .sqlite3)만 업로드 가능합니다.', 'error');
+                return;
+            }
+
+            showStatus('파일을 읽는 중...', 'info');
+            
+            const reader = new FileReader();
+            reader.onload = e => loadDatabase(e.target.result, file.name);
+            reader.onerror = () => showStatus('파일 읽기 중 오류가 발생했습니다.', 'error');
+            reader.readAsArrayBuffer(file);
+        }
+
+        // SQL.js 라이브러리 로드
+        async function ensureSQLJs() {
+            if (typeof initSqlJs !== 'undefined') return;
+            
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = `${CONFIG.SQLJSCDN}/sql-wasm.js`;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        // 데이터베이스 로드
+        async function loadDatabase(arrayBuffer, fileName) {
+            try {
+                showStatus('SQL.js 라이브러리를 로드 중...', 'info');
+                await ensureSQLJs();
+                
+                const SQL = await initSqlJs({
+                    locateFile: file => `${CONFIG.SQLJSCDN}/${file}`
+                });
+                
+                state.db = new SQL.Database(new Uint8Array(arrayBuffer));
+                state.fileName = fileName;
+                
+                analyzeDatabase();
+            } catch (error) {
+                showStatus('데이터베이스 로드 실패: ' + error.message, 'error');
+                console.error(error);
+            }
+        }
+
+        // 데이터베이스 분석
+        function analyzeDatabase() {
+            try {
+                const tables = state.db.exec(
+                    "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
+                );
+                
+                if (!tables.length || !tables[0].values.length) {
+                    showStatus('데이터베이스에 테이블이 없습니다.', 'error');
+                    return;
+                }
+
+                const tableName = tables[0].values[0][0];
+                const columns = state.db.exec(`PRAGMA table_info(${tableName})`);
+                
+                state.tableInfo = {
+                    name: tableName,
+                    columns: columns[0].values.map(col => col[1])
+                };
+
+                const rowCount = state.db.exec(`SELECT COUNT(*) FROM ${tableName}`);
+                const count = rowCount[0].values[0][0];
+
+                showStatus(`"${state.fileName}" 로드 완료! 검색이 가능합니다.`, 'success');
+                displayDatabaseInfo(tableName, count);
+                DOM.searchForm.style.display = 'grid';
+            } catch (error) {
+                showStatus('데이터베이스 분석 오류: ' + error.message, 'error');
+                console.error(error);
+            }
+        }
+
+        // 데이터베이스 정보 표시
+        function displayDatabaseInfo(tableName, count) {
+            DOM.dbInfo.innerHTML = `
+                <h4>데이터베이스 정보</h4>
+                <p>테이블: ${tableName} | 레코드 수: ${count}개</p>
+                <p>컬럼: ${state.tableInfo.columns.join(', ')}</p>
+            `;
+            DOM.dbInfo.style.display = 'block';
+        }
+
+        // 상태 메시지 표시
+        function showStatus(message, type) {
+            DOM.statusMessage.innerHTML = `<div class="status-message ${type}">${message}</div>`;
+        }
+
+        // 검색 파라미터 수집
+        function getSearchParams() {
+            return Object.keys(CONFIG.FIELD_MAPPING).reduce((params, key) => {
+                const value = document.getElementById(key).value.trim();
+                if (value) params[key] = value;
+                return params;
+            }, {});
+        }
+
+        // 제품 검색
+        function searchProducts() {
+            if (!state.db || !state.tableInfo) {
+                showStatus('먼저 데이터베이스 파일을 업로드해주세요.', 'error');
+                return;
+            }
+
+            DOM.loading.style.display = 'block';
+            DOM.resultsContainer.innerHTML = '';
+            
+            setTimeout(() => {
+                try {
+                    const searchParams = getSearchParams();
+                    const products = performSearch(searchParams);
+                    displayResults(products);
+                } catch (error) {
+                    console.error('검색 오류:', error);
+                    DOM.resultsContainer.innerHTML = `<div class="no-results">검색 중 오류: ${error.message}</div>`;
+                } finally {
+                    DOM.loading.style.display = 'none';
+                }
+            }, 100);
+        }
+
+        // 컬럼명 매칭
+        function findMatchingColumn(fieldKey) {
+            const possibleNames = CONFIG.FIELD_MAPPING[fieldKey];
+            return possibleNames.find(name => 
+                state.tableInfo.columns.some(col => col.toUpperCase() === name.toUpperCase())
+            );
+        }
+
+        // 실제 컬럼명 가져오기
+        function getActualColumnName(matchedCol) {
+            return state.tableInfo.columns.find(col => 
+                col.toUpperCase() === matchedCol.toUpperCase()
+            );
+        }
+
+        // 컬럼명 안전하게 처리 (공백, 특수문자 대응)
+        function getSafeColumnName(colName) {
+            return /[ -]/.test(colName) ? `[${colName}]` : colName;
+        }
+
+        // 검색 쿼리 빌드 및 실행
+        function performSearch(searchParams) {
+            let query = `SELECT * FROM ${state.tableInfo.name} WHERE 1=1`;
+            const params = [];
+            
+            Object.entries(searchParams).forEach(([key, value]) => {
+                const matchedCol = findMatchingColumn(key);
+                if (matchedCol) {
+                    const actualCol = getActualColumnName(matchedCol);
+                    const safeCol = getSafeColumnName(actualCol);
+                    query += ` AND ${safeCol} LIKE ?`;
+                    params.push(`%${value}%`);
+                }
+            });
+            
+            const stmt = state.db.prepare(query);
+            stmt.bind(params);
+            
+            const products = [];
+            while (stmt.step()) {
+                products.push(stmt.getAsObject());
+            }
+            
+            stmt.free();
+            return products;
+        }
+
+        // 가격 포맷팅
+        function formatPrice(price) {
+            if (!price) return "0";
+            const num = typeof price === 'string' ? parseInt(price.replace(/,/g, '')) : price;
+            return isNaN(num) ? "0" : num.toLocaleString('ko-KR');
+        }
+
+        // 컬럼 값 찾기
+        function findColumnValue(product, possibleKeys) {
+            for (const key of possibleKeys) {
+                const foundKey = Object.keys(product).find(k => 
+                    k.toUpperCase() === key.toUpperCase()
+                );
+                if (foundKey && product[foundKey]) {
+                    return product[foundKey];
+                }
+            }
+            return null;
+        }
+
+        // 결과 표시
+        function displayResults(products) {
+            if (products.length === 0) {
+                DOM.resultsContainer.innerHTML = '<div class="no-results">검색 결과가 없습니다.</div>';
+                return;
+            }
+            
+            let tableHTML = '<table><thead><tr>';
+            CONFIG.DISPLAY_COLUMNS.forEach(col => {
+                tableHTML += `<th>${col.label}</th>`;
+            });
+            tableHTML += '</tr></thead><tbody>';
+            
+            products.forEach(product => {
+                tableHTML += '<tr>';
+                CONFIG.DISPLAY_COLUMNS.forEach(col => {
+                    let value = findColumnValue(product, col.keys) || '-';
+                    if (col.label === '판매가') {
+                        value = formatPrice(value) + '원';
+                    }
+                    tableHTML += `<td>${value}</td>`;
+                });
+                tableHTML += '</tr>';
+            });
+            
+            tableHTML += `</tbody></table>
+                <div style="margin-top: 10px; color: #666; font-size: 14px;">
+                    총 ${products.length}개의 제품이 검색되었습니다.
+                </div>`;
+            
+            DOM.resultsContainer.innerHTML = tableHTML;
+        }
+
+        // 폼 초기화
+        function resetForm() {
+            Object.keys(CONFIG.FIELD_MAPPING).forEach(key => {
+                document.getElementById(key).value = '';
+            });
+            DOM.resultsContainer.innerHTML = '';
+        }
+
+        // 앱 초기화
+        initEventListeners();
+    </script>
+</body>
+</html>
