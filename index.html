@@ -1,0 +1,1795 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRICE_LIST</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+        }
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 24px;
+        }
+        
+        /* 탭 스타일 */
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #ddd;
+            margin-bottom: 20px;
+            gap: 5px;
+        }
+        .tab {
+            padding: 12px 30px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            color: #666;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background-color: #e0e0e0;
+        }
+        .tab.active {
+            background-color: #4a6fa5;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        
+        .upload-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border: 2px dashed #ddd;
+        }
+        .upload-area {
+            text-align: center;
+            padding: 20px 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .upload-area:hover {
+            background-color: #f0f0f0;
+        }
+        .upload-area i {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        .upload-area h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .upload-area p {
+            font-size: 13px;
+            margin: 3px 0;
+        }
+        .file-input {
+            display: none;
+        }
+        .file-info {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        .db-info {
+            margin-top: 10px;
+            padding: 8px;
+            background-color: #e7f3ff;
+            border-radius: 4px;
+            display: none;
+            font-size: 13px;
+        }
+        .db-info h4 {
+            margin-bottom: 3px;
+            color: #0066cc;
+            font-size: 14px;
+        }
+        .db-info p {
+            margin: 2px 0;
+            font-size: 12px;
+        }
+        .search-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            display: none;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+            font-size: 14px;
+        }
+        .field-note {
+            font-size: 11px;
+            color: #888;
+            margin-top: 2px;
+            margin-bottom: 5px;
+            font-style: italic;
+        }
+        select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: white;
+            cursor: pointer;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+            grid-column: 1 / -1;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4a6fa5;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #3a5a80;
+        }
+        .reset-btn {
+            background-color: #6c757d;
+        }
+        .reset-btn:hover {
+            background-color: #545b62;
+        }
+        .results {
+            margin-top: 20px;
+        }
+        .sort-controls {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+        .sort-controls label {
+            font-size: 14px;
+            color: #555;
+            font-weight: normal;
+        }
+        .sort-controls select {
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        th, td {
+            padding: 12px 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            word-break: keep-all;
+            white-space: nowrap;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .price-value {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+        .status-message {
+            text-align: center;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        /* 모바일 최적화 */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 10px;
+            }
+            h1 {
+                font-size: 20px;
+                margin-bottom: 10px;
+            }
+            .tabs {
+                gap: 3px;
+            }
+            .tab {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            .search-form {
+                grid-template-columns: 1fr;
+                padding: 10px;
+                gap: 10px;
+            }
+            
+            /* 모바일에서 테이블을 카드 형태로 변환 */
+            .results h2 {
+                font-size: 18px;
+            }
+            table {
+                font-size: 13px;
+            }
+            table thead {
+                display: none;
+            }
+            table, table tbody, table tr, table td {
+                display: block;
+                width: 100%;
+            }
+            table tr {
+                margin-bottom: 20px;
+                border: 2px solid #ddd;
+                border-radius: 8px;
+                padding: 15px;
+                background-color: #fff;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            table tr:hover {
+                background-color: #f9f9f9;
+            }
+            table td {
+                padding: 10px 0;
+                text-align: left;
+                border-bottom: 1px solid #f0f0f0;
+                display: block;
+                white-space: normal;
+                word-break: break-word;
+                font-weight: bold;
+            }
+            table td:last-child {
+                border-bottom: none;
+            }
+            table td:before {
+                content: attr(data-label) " : ";
+                display: inline;
+                font-weight: bold;
+                color: #333;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PRICE_LIST</h1>
+        
+        <!-- 탭 메뉴 -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('essa')">ESSA</button>
+            <button class="tab" onclick="switchTab('ace')">ACE</button>
+        </div>
+        
+        <!-- ESSA 탭 내용 -->
+        <div id="essa-tab" class="tab-content active">
+            <div class="upload-section">
+                <div class="upload-area" id="uploadArea-essa">
+                    <div>
+                        <i>📁</i>
+                        <h3>SQLite 데이터베이스 파일 업로드</h3>
+                        <p>클릭하거나 파일을 드래그하여 업로드하세요</p>
+                        <p class="file-info">지원 형식: .db, .sqlite, .sqlite3</p>
+                    </div>
+                    <input type="file" id="fileInput-essa" class="file-input" accept=".db,.sqlite,.sqlite3">
+                </div>
+                <div id="statusMessage-essa"></div>
+                <div id="dbInfo-essa" class="db-info"></div>
+            </div>
+            
+            <div class="search-form" id="searchForm-essa">
+                <div class="form-group">
+                    <label for="essa_p_name">상품명</label>
+                    <div class="field-note">선택시 다른 옵션들이 필터링됨</div>
+                    <select id="essa_p_name" onchange="updateEssaDependentOptions('p_name')"><option value="">전체</option></select>
+                </div>
+                <div class="form-group">
+                    <label for="essa_size">사이즈</label>
+                    <div class="field-note">상품명 선택시 해당 사이즈만 표시</div>
+                    <select id="essa_size" onchange="updateEssaDependentOptions('size')"><option value="">전체</option></select>
+                </div>
+                <div class="form-group">
+                    <label for="essa_size_option">사이즈 옵션</label>
+                    <div class="field-note">상품명 선택시 해당 옵션만 표시</div>
+                    <select id="essa_size_option"><option value="">전체</option></select>
+                </div>
+                <div class="form-group">
+                    <label for="essa_material">소재</label>
+                    <div class="field-note">상품명 선택시 해당 소재만 표시</div>
+                    <select id="essa_material" onchange="updateEssaDependentOptions('material')"><option value="">전체</option></select>
+                </div>
+                <div class="form-group">
+                    <label for="essa_fabric">원단</label>
+                    <div class="field-note">소재 선택시 해당 원단만 표시</div>
+                    <select id="essa_fabric"><option value="">전체</option></select>
+                </div>
+                <div class="form-group">
+                    <label for="essa_function">기능</label>
+                    <div class="field-note">상품명 선택시 해당 기능만 표시</div>
+                    <select id="essa_function"><option value="">전체</option></select>
+                </div>
+                <div class="form-group">
+                    <label for="essa_stool">스툴 포함</label>
+                    <div class="field-note">상품명 선택시 해당 옵션만 표시</div>
+                    <select id="essa_stool"><option value="">전체</option></select>
+                </div>
+                <div class="form-group">
+                    <label for="essa_style">스타일</label>
+                    <div class="field-note">상품명 선택시 해당 스타일만 표시</div>
+                    <select id="essa_style"><option value="">전체</option></select>
+                </div>
+                <div class="form-group">
+                    <label for="essa_leather_option">가죽 옵션</label>
+                    <div class="field-note">상품명 선택시 해당 옵션만 표시</div>
+                    <select id="essa_leather_option"><option value="">전체</option></select>
+                </div>
+                <div class="form-group">
+                    <label for="essa_event_product">행사 제품</label>
+                    <div class="field-note">상품명 선택시 해당 옵션만 표시</div>
+                    <select id="essa_event_product"><option value="">전체</option></select>
+                </div>
+                <div class="buttons">
+                    <button onclick="searchProducts('essa')">검색</button>
+                    <button onclick="resetForm('essa')" class="reset-btn">초기화</button>
+                </div>
+            </div>
+            
+            <div class="loading" id="loading-essa">🔍 검색 중입니다...</div>
+            
+            <div class="results">
+                <h2>검색 결과</h2>
+                <div id="results-container-essa"></div>
+            </div>
+        </div>
+        
+        <!-- ACE 탭 내용 -->
+        <div id="ace-tab" class="tab-content">
+            <div class="upload-section">
+                <div class="upload-area" id="uploadArea-ace">
+                    <div>
+                        <i>📁</i>
+                        <h3>SQLite 데이터베이스 파일 업로드</h3>
+                        <p>클릭하거나 파일을 드래그하여 업로드하세요</p>
+                        <p class="file-info">지원 형식: .db, .sqlite, .sqlite3</p>
+                    </div>
+                    <input type="file" id="fileInput-ace" class="file-input" accept=".db,.sqlite,.sqlite3">
+                </div>
+                <div id="statusMessage-ace"></div>
+                <div id="dbInfo-ace" class="db-info"></div>
+            </div>
+            
+            <div class="search-form" id="searchForm-ace">
+                <!-- 1. 프레임 -->
+                <div class="form-group">
+                    <label for="ace_frame">프레임</label>
+                    <div class="field-note">프레임 선택시 해당 타입/사이즈 표시</div>
+                    <select id="ace_frame" onchange="updateDependentOptions('ace')"><option value="">전체</option></select>
+                </div>
+                <!-- 2. 타입 -->
+                <div class="form-group">
+                    <label for="ace_type">타입</label>
+                    <div class="field-note">프레임 선택 시 연동됨</div>
+                    <select id="ace_type"><option value="">전체</option></select>
+                </div>
+                <!-- 3. 매트리스 -->
+                <div class="form-group">
+                    <label for="ace_mattress">매트리스</label>
+                    <div class="field-note">프레임 미선택 시 사이즈와 연동됨</div>
+                    <select id="ace_mattress" onchange="updateDependentOptions('ace')"><option value="">전체</option></select>
+                </div>
+                <!-- 4. 사이즈 -->
+                <div class="form-group">
+                    <label for="ace_size">사이즈</label>
+                    <div class="field-note">프레임 또는 매트리스 선택 시 연동됨</div>
+                    <select id="ace_size"><option value="">전체</option></select>
+                </div>
+                <!-- 5. 협탁 -->
+                <div class="form-group">
+                    <label for="ace_nightstand">협탁</label>
+                    <div class="field-note">데이터베이스에서 자동 로드</div>
+                    <select id="ace_nightstand"><option value="">전체</option></select>
+                </div>
+                <!-- 6. 사이드보드 -->
+                <div class="form-group">
+                    <label for="ace_sideboard">사이드보드</label>
+                    <div class="field-note">데이터베이스에서 자동 로드</div>
+                    <select id="ace_sideboard"><option value="">전체</option></select>
+                </div>
+                <!-- 7. 협탁 + 사이드보드 -->
+                <div class="form-group">
+                    <label for="ace_nightstand_sideboard">협탁 + 사이드보드</label>
+                    <div class="field-note">데이터베이스에서 자동 로드</div>
+                    <select id="ace_nightstand_sideboard"><option value="">전체</option></select>
+                </div>
+                <!-- 8. 가구 -->
+                <div class="form-group">
+                    <label for="ace_furniture">가구</label>
+                    <div class="field-note">데이터베이스에서 자동 로드</div>
+                    <select id="ace_furniture"><option value="">전체</option></select>
+                </div>
+                <!-- 9. 연계 품목 -->
+                <div class="form-group">
+                    <label for="ace_related_items">연계 품목</label>
+                    <div class="field-note">데이터베이스에서 자동 로드</div>
+                    <select id="ace_related_items"><option value="">전체</option></select>
+                </div>
+                <!-- 10. 구분 -->
+                <div class="form-group">
+                    <label for="ace_category">구분</label>
+                    <div class="field-note">데이터베이스에서 자동 로드</div>
+                    <select id="ace_category"><option value="">전체</option></select>
+                </div>
+                <div class="buttons">
+                    <button onclick="searchProducts('ace')">검색</button>
+                    <button onclick="resetForm('ace')" class="reset-btn">초기화</button>
+                </div>
+            </div>
+            
+            <div class="loading" id="loading-ace">🔍 검색 중입니다...</div>
+            
+            <div class="results">
+                <h2>검색 결과</h2>
+                <div id="results-container-ace"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const CONFIG = {
+            SQLJSCDN: 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0',
+            ALLOWED_EXTENSIONS: /\.(db|sqlite|sqlite3)$/i,
+            FIELD_MAPPING: {
+                essa: {
+                    p_name: ['P_NAME', '상품명', 'PRODUCT_NAME', 'NAME'],
+                    size: ['SIZE', '사이즈'],
+                    size_option: ['SIZE 옵션', 'SIZE_OPTION', '사이즈옵션', '사이즈 옵션', 'SIZEOPTION'],
+                    material: ['MATERIAL', '소재'],
+                    fabric: ['FABRIC', '원단'],
+                    function: ['FUNCTION', '기능'],
+                    stool: ['스툴포함', 'STOOL', '스툴', '스툴 포함', 'STOOL 포함', 'STOOL포함'],
+                    style: ['STYLE', '스타일'],
+                    leather_option: ['가죽옵션', 'LEATHER_OPTION', '가죽 옵션', 'LEATHEROPTION'],
+                    event_product: ['행사제품', '행사 제품', 'EVENT_PRODUCT', 'EVENT', '이벤트']
+                },
+                ace: {
+                    frame: ['프레임', 'FRAME', 'FRAME_TYPE', '프레임타입'],
+                    type: ['타입', 'TYPE', 'TYPE_NM', 'BED_TYPE'],
+                    mattress: ['매트리스', 'MATTRESS', 'MATTRESS_TYPE', '매트리스타입'],
+                    size: ['SIZE', '사이즈', 'BED_SIZE'],
+                    nightstand: ['협탁', 'NIGHTSTAND', '협탁포함', 'NIGHTSTAND_YN'],
+                    sideboard: ['사이드보드', 'SIDEBOARD', '사이드보드포함', 'SIDEBOARD_YN'],
+                    nightstand_sideboard: ['협탁+사이드보드', '협탁 + 사이드보드', 'NIGHTSTAND_SIDEBOARD', '협탁사이드보드', 'NIGHTSIDE'],
+                    furniture: ['가구', 'FURNITURE', 'FURNITURE_TYPE', '가구타입'],
+                    related_items: ['연계 품목', '연계품목', 'RELATED_ITEMS', '연계', 'RELATED_PRODUCTS', '연계품목코드', 'RELATED_ITEM_CODE'],
+                    category: ['구분', 'CATEGORY', 'CATEGORY_NM', '분류']
+                }
+            },
+            DISPLAY_COLUMNS: {
+                essa: [
+                    { keys: ['품목코드', 'PRODUCT_CODE', 'CODE', '코드'], label: '품목코드' },
+                    { keys: ['상품명', 'P_NAME', 'PRODUCT_NAME', 'NAME'], label: '상품명' },
+                    { keys: ['사이즈', 'SIZE'], label: '사이즈' },
+                    { keys: ['판매가', 'PRICE', 'SALE_PRICE', '가격'], label: '판매가' },
+                    { keys: ['행사제품', '행사 제품', 'EVENT_PRODUCT', 'EVENT', '이벤트'], label: '행사제품' }
+                ],
+                ace: [
+                    { keys: ['브랜드', 'BRAND', 'BRAND_NM'], label: '브랜드' },
+                    { keys: ['상품명', 'P_NAME', 'PRODUCT_NAME', 'NAME'], label: '상품명' },
+                    { keys: ['사이즈', 'SIZE', 'BED_SIZE'], label: '사이즈' },
+                    { keys: ['색상', 'COLOR', 'COLOR_NM', '색상명'], label: '색상' },
+                    { keys: ['판매가', 'PRICE', 'SALE_PRICE', '가격', '금액'], label: '판매가' }
+                ]
+            },
+            TABLE_CONFIG: {
+                essa: 'DATA',
+                ace: 'DATA_1'
+            }
+        };
+
+        const state = {
+            essa: { db: null, fileName: '', tableInfo: null, currentProducts: [], currentSort: 'none' },
+            ace: { db: null, fileName: '', tableInfo: null, currentProducts: [], currentSort: 'none' }
+        };
+
+        // ESSA 탭 종속 옵션 업데이트 함수
+        function updateEssaDependentOptions(changedField) {
+            if (!state.essa.db || !state.essa.tableInfo) return;
+
+            const pNameValue = document.getElementById('essa_p_name').value;
+            const sizeValue = document.getElementById('essa_size').value;
+            const materialValue = document.getElementById('essa_material').value;
+
+            console.log('ESSA 종속 옵션 업데이트:', { changedField, pNameValue, sizeValue, materialValue });
+
+            // 상품명이 선택된 경우
+            if (pNameValue) {
+                updateEssaOptionsByProductName(pNameValue, sizeValue, materialValue, changedField);
+            }
+            // 상품명이 선택되지 않고 사이즈가 선택된 경우
+            else if (sizeValue) {
+                updateEssaOptionsBySize(sizeValue, materialValue, changedField);
+            }
+            // 상품명과 사이즈가 선택되지 않고 소재가 선택된 경우
+            else if (materialValue) {
+                updateEssaOptionsByMaterial(materialValue, changedField);
+            }
+            // 아무것도 선택되지 않은 경우
+            else {
+                resetEssaDependentOptions();
+            }
+        }
+
+        function updateEssaOptionsByProductName(productName, currentSize, currentMaterial, changedField) {
+            console.log('상품명으로 옵션 업데이트:', productName);
+            
+            // 상품명 컬럼 찾기
+            const pNameCol = findMatchingColumn('p_name', 'essa');
+            if (!pNameCol) return;
+            
+            const actualPNameCol = getActualColumnName(pNameCol, 'essa');
+            const safePNameCol = getSafeColumnName(actualPNameCol);
+
+            // 상품명에 해당하는 모든 필터 옵션 업데이트
+            const dependentFields = ['size', 'size_option', 'material', 'fabric', 'function', 'stool', 'style', 'leather_option', 'event_product'];
+            
+            dependentFields.forEach(fieldKey => {
+                // 변경된 필드가 아니면서, size나 material인 경우에는 이미 선택된 값 유지
+                if (changedField === fieldKey && (fieldKey === 'size' || fieldKey === 'material')) {
+                    return;
+                }
+                
+                const fieldCol = findMatchingColumn(fieldKey, 'essa');
+                if (!fieldCol) return;
+                
+                const actualFieldCol = getActualColumnName(fieldCol, 'essa');
+                const safeFieldCol = getSafeColumnName(actualFieldCol);
+                
+                try {
+                    // WHERE 조건 구성
+                    let whereClause = `${safePNameCol} = ?`;
+                    const params = [productName];
+                    
+                    // 사이즈가 선택된 경우 추가 조건
+                    if (fieldKey !== 'size' && currentSize) {
+                        const sizeCol = findMatchingColumn('size', 'essa');
+                        if (sizeCol) {
+                            const actualSizeCol = getActualColumnName(sizeCol, 'essa');
+                            const safeSizeCol = getSafeColumnName(actualSizeCol);
+                            whereClause += ` AND ${safeSizeCol} = ?`;
+                            params.push(currentSize);
+                        }
+                    }
+                    
+                    // 소재가 선택된 경우 추가 조건 (원단 필드인 경우)
+                    if (fieldKey === 'fabric' && currentMaterial) {
+                        const materialCol = findMatchingColumn('material', 'essa');
+                        if (materialCol) {
+                            const actualMaterialCol = getActualColumnName(materialCol, 'essa');
+                            const safeMaterialCol = getSafeColumnName(actualMaterialCol);
+                            whereClause += ` AND ${safeMaterialCol} = ?`;
+                            params.push(currentMaterial);
+                        }
+                    }
+                    
+                    const query = `SELECT DISTINCT ${safeFieldCol} FROM ${state.essa.tableInfo.name} 
+                                  WHERE ${whereClause} AND ${safeFieldCol} IS NOT NULL AND TRIM(${safeFieldCol}) != '' 
+                                  ORDER BY ${safeFieldCol}`;
+                    
+                    console.log(`${fieldKey} 쿼리:`, query, params);
+                    
+                    const result = state.essa.db.exec(query, params);
+                    const selectElement = document.getElementById(`essa_${fieldKey}`);
+                    const currentValue = selectElement.value;
+                    
+                    // 현재 선택된 값이 변경된 필드가 아니면 유지
+                    if (changedField !== fieldKey) {
+                        selectElement.innerHTML = '<option value="">전체</option>';
+                    } else {
+                        selectElement.innerHTML = '<option value="">전체</option>';
+                    }
+                    
+                    if (result.length > 0 && result[0].values.length > 0) {
+                        const uniqueValues = [];
+                        result[0].values.forEach(row => {
+                            const value = row[0];
+                            if (value && value.toString().trim() !== '') {
+                                // SIZE 값 정규화
+                                if (fieldKey === 'size') {
+                                    const normalized = normalizeSizeValue(value.toString().trim());
+                                    if (normalized) {
+                                        uniqueValues.push(normalized);
+                                    }
+                                } else {
+                                    uniqueValues.push(value.toString().trim());
+                                }
+                            }
+                        });
+                        
+                        const sortedUniqueValues = [...new Set(uniqueValues)].sort((a, b) => {
+                            if (fieldKey === 'size') {
+                                return compareSizeValues(a, b);
+                            }
+                            return a.localeCompare(b);
+                        });
+                        
+                        sortedUniqueValues.forEach(value => {
+                            const option = document.createElement('option');
+                            option.value = value;
+                            option.textContent = value;
+                            // 변경되지 않은 필드에서 현재 값 유지
+                            if (changedField !== fieldKey && value === currentValue) {
+                                option.selected = true;
+                            }
+                            selectElement.appendChild(option);
+                        });
+                        
+                        const fieldNote = selectElement.parentNode.querySelector('.field-note');
+                        if (fieldNote) {
+                            if (fieldKey === 'fabric' && currentMaterial) {
+                                fieldNote.textContent = `소재 "${currentMaterial}"에 해당하는 원단 (${sortedUniqueValues.length}개)`;
+                            } else {
+                                fieldNote.textContent = `상품명 "${productName}"에 해당하는 옵션 (${sortedUniqueValues.length}개)`;
+                            }
+                        }
+                        
+                        console.log(`${fieldKey} 옵션 업데이트 완료:`, sortedUniqueValues.length, '개');
+                    } else {
+                        const fieldNote = selectElement.parentNode.querySelector('.field-note');
+                        if (fieldNote) {
+                            if (fieldKey === 'fabric' && currentMaterial) {
+                                fieldNote.textContent = `소재 "${currentMaterial}"에 해당하는 원단 없음`;
+                            } else {
+                                fieldNote.textContent = `상품명 "${productName}"에 해당하는 ${fieldKey} 없음`;
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error(`Error updating ${fieldKey}:`, error);
+                }
+            });
+        }
+
+        function updateEssaOptionsBySize(sizeValue, currentMaterial, changedField) {
+            console.log('사이즈로 옵션 업데이트:', sizeValue);
+            
+            const sizeCol = findMatchingColumn('size', 'essa');
+            if (!sizeCol) return;
+            
+            const actualSizeCol = getActualColumnName(sizeCol, 'essa');
+            const safeSizeCol = getSafeColumnName(actualSizeCol);
+
+            const dependentFields = ['p_name', 'size_option', 'material', 'fabric', 'function', 'stool', 'style', 'leather_option', 'event_product'];
+            
+            dependentFields.forEach(fieldKey => {
+                if (changedField === fieldKey) return;
+                
+                const fieldCol = findMatchingColumn(fieldKey, 'essa');
+                if (!fieldCol) return;
+                
+                const actualFieldCol = getActualColumnName(fieldCol, 'essa');
+                const safeFieldCol = getSafeColumnName(actualFieldCol);
+                
+                try {
+                    let whereClause = `${safeSizeCol} = ?`;
+                    const params = [sizeValue];
+                    
+                    if (fieldKey === 'fabric' && currentMaterial) {
+                        const materialCol = findMatchingColumn('material', 'essa');
+                        if (materialCol) {
+                            const actualMaterialCol = getActualColumnName(materialCol, 'essa');
+                            const safeMaterialCol = getSafeColumnName(actualMaterialCol);
+                            whereClause += ` AND ${safeMaterialCol} = ?`;
+                            params.push(currentMaterial);
+                        }
+                    }
+                    
+                    const query = `SELECT DISTINCT ${safeFieldCol} FROM ${state.essa.tableInfo.name} 
+                                  WHERE ${whereClause} AND ${safeFieldCol} IS NOT NULL AND TRIM(${safeFieldCol}) != '' 
+                                  ORDER BY ${safeFieldCol}`;
+                    
+                    const result = state.essa.db.exec(query, params);
+                    const selectElement = document.getElementById(`essa_${fieldKey}`);
+                    const currentValue = selectElement.value;
+                    selectElement.innerHTML = '<option value="">전체</option>';
+                    
+                    if (result.length > 0 && result[0].values.length > 0) {
+                        const uniqueValues = [];
+                        result[0].values.forEach(row => {
+                            const value = row[0];
+                            if (value && value.toString().trim() !== '') {
+                                uniqueValues.push(value.toString().trim());
+                            }
+                        });
+                        
+                        const sortedUniqueValues = [...new Set(uniqueValues)].sort();
+                        
+                        sortedUniqueValues.forEach(value => {
+                            const option = document.createElement('option');
+                            option.value = value;
+                            option.textContent = value;
+                            if (value === currentValue) {
+                                option.selected = true;
+                            }
+                            selectElement.appendChild(option);
+                        });
+                        
+                        const fieldNote = selectElement.parentNode.querySelector('.field-note');
+                        if (fieldNote) {
+                            if (fieldKey === 'fabric' && currentMaterial) {
+                                fieldNote.textContent = `사이즈 "${sizeValue}", 소재 "${currentMaterial}"에 해당하는 원단 (${sortedUniqueValues.length}개)`;
+                            } else {
+                                fieldNote.textContent = `사이즈 "${sizeValue}"에 해당하는 옵션 (${sortedUniqueValues.length}개)`;
+                            }
+                        }
+                    }
+                } catch (error) {
+                    console.error(`Error updating ${fieldKey}:`, error);
+                }
+            });
+        }
+
+        function updateEssaOptionsByMaterial(materialValue, changedField) {
+            console.log('소재로 옵션 업데이트 (원단만):', materialValue);
+            
+            const materialCol = findMatchingColumn('material', 'essa');
+            if (!materialCol) return;
+            
+            const actualMaterialCol = getActualColumnName(materialCol, 'essa');
+            const safeMaterialCol = getSafeColumnName(actualMaterialCol);
+
+            // 소재가 선택된 경우 원단만 업데이트
+            if (changedField !== 'fabric') {
+                const fabricCol = findMatchingColumn('fabric', 'essa');
+                if (fabricCol) {
+                    const actualFabricCol = getActualColumnName(fabricCol, 'essa');
+                    const safeFabricCol = getSafeColumnName(actualFabricCol);
+                    
+                    try {
+                        const query = `SELECT DISTINCT ${safeFabricCol} FROM ${state.essa.tableInfo.name} 
+                                      WHERE ${safeMaterialCol} = ? AND ${safeFabricCol} IS NOT NULL AND TRIM(${safeFabricCol}) != '' 
+                                      ORDER BY ${safeFabricCol}`;
+                        
+                        const result = state.essa.db.exec(query, [materialValue]);
+                        const selectElement = document.getElementById('essa_fabric');
+                        const currentValue = selectElement.value;
+                        selectElement.innerHTML = '<option value="">전체</option>';
+                        
+                        if (result.length > 0 && result[0].values.length > 0) {
+                            const uniqueValues = [];
+                            result[0].values.forEach(row => {
+                                const value = row[0];
+                                if (value && value.toString().trim() !== '') {
+                                    uniqueValues.push(value.toString().trim());
+                                }
+                            });
+                            
+                            const sortedUniqueValues = [...new Set(uniqueValues)].sort();
+                            
+                            sortedUniqueValues.forEach(value => {
+                                const option = document.createElement('option');
+                                option.value = value;
+                                option.textContent = value;
+                                if (value === currentValue) {
+                                    option.selected = true;
+                                }
+                                selectElement.appendChild(option);
+                            });
+                            
+                            const fieldNote = selectElement.parentNode.querySelector('.field-note');
+                            if (fieldNote) {
+                                fieldNote.textContent = `소재 "${materialValue}"에 해당하는 원단 (${sortedUniqueValues.length}개)`;
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error updating fabric:', error);
+                    }
+                }
+            }
+        }
+
+        function resetEssaDependentOptions() {
+            console.log('ESSA 종속 옵션 초기화');
+            
+            const fields = ['p_name', 'size', 'size_option', 'material', 'fabric', 'function', 'stool', 'style', 'leather_option', 'event_product'];
+            
+            fields.forEach(fieldKey => {
+                const selectElement = document.getElementById(`essa_${fieldKey}`);
+                selectElement.innerHTML = '<option value="">전체</option>';
+                
+                const fieldNote = selectElement.parentNode.querySelector('.field-note');
+                if (fieldNote) {
+                    if (fieldKey === 'p_name') {
+                        fieldNote.textContent = '선택시 다른 옵션들이 필터링됨';
+                    } else if (fieldKey === 'size') {
+                        fieldNote.textContent = '상품명 선택시 해당 사이즈만 표시';
+                    } else if (fieldKey === 'fabric') {
+                        fieldNote.textContent = '소재 선택시 해당 원단만 표시';
+                    } else {
+                        fieldNote.textContent = '상품명 선택시 해당 옵션만 표시';
+                    }
+                }
+            });
+            
+            // 모든 옵션 다시 채우기
+            if (state.essa.db && state.essa.tableInfo) {
+                populateAllEssaOptions();
+            }
+        }
+
+        function populateAllEssaOptions() {
+            const fieldMapping = CONFIG.FIELD_MAPPING.essa;
+            
+            Object.keys(fieldMapping).forEach(fieldKey => {
+                const matchedCol = findMatchingColumn(fieldKey, 'essa');
+                if (matchedCol) {
+                    const actualCol = getActualColumnName(matchedCol, 'essa');
+                    const safeCol = getSafeColumnName(actualCol);
+                    
+                    try {
+                        const query = `SELECT DISTINCT ${safeCol} FROM ${state.essa.tableInfo.name} 
+                                      WHERE ${safeCol} IS NOT NULL AND TRIM(${safeCol}) != '' 
+                                      ORDER BY ${safeCol}`;
+                        
+                        const result = state.essa.db.exec(query);
+                        const selectElement = document.getElementById(`essa_${fieldKey}`);
+                        selectElement.innerHTML = '<option value="">전체</option>';
+                        
+                        if (result.length > 0 && result[0].values.length > 0) {
+                            const uniqueValues = [];
+                            result[0].values.forEach(row => {
+                                const value = row[0];
+                                if (value && value.toString().trim() !== '') {
+                                    // SIZE 값 정규화
+                                    if (fieldKey === 'size') {
+                                        const normalized = normalizeSizeValue(value.toString().trim());
+                                        if (normalized) {
+                                            uniqueValues.push(normalized);
+                                        }
+                                    } else {
+                                        uniqueValues.push(value.toString().trim());
+                                    }
+                                }
+                            });
+                            
+                            const sortedUniqueValues = [...new Set(uniqueValues)].sort((a, b) => {
+                                if (fieldKey === 'size') {
+                                    return compareSizeValues(a, b);
+                                }
+                                return a.localeCompare(b);
+                            });
+                            
+                            sortedUniqueValues.forEach(value => {
+                                const option = document.createElement('option');
+                                option.value = value;
+                                option.textContent = value;
+                                selectElement.appendChild(option);
+                            });
+                            
+                            const fieldNote = selectElement.parentNode.querySelector('.field-note');
+                            if (fieldNote) {
+                                fieldNote.textContent = `총 ${sortedUniqueValues.length}개 옵션`;
+                            }
+                        }
+                    } catch (error) {
+                        console.error(`Error populating essa ${fieldKey}:`, error);
+                    }
+                }
+            });
+        }
+
+        // SIZE 값 정규화 함수
+        function normalizeSizeValue(size) {
+            if (!size) return null;
+            
+            let normalized = size.toString().trim();
+            
+            // "1인" 형태로 표준화
+            if (normalized.match(/^\d+\s*(인|人|IN)$/i)) {
+                const num = normalized.match(/^\d+/)[0];
+                return `${num}인`;
+            }
+            
+            // "SS", "S", "M", "L" 등 사이즈 코드
+            if (normalized.match(/^[A-Z]{1,3}$/i)) {
+                return normalized.toUpperCase();
+            }
+            
+            return normalized;
+        }
+
+        // SIZE 값 비교 함수
+        function compareSizeValues(a, b) {
+            // 숫자 추출
+            const numA = a.match(/\d+/)?.[0] || 0;
+            const numB = b.match(/\d+/)?.[0] || 0;
+            
+            // 숫자가 있는 경우 숫자 기준 정렬
+            if (numA !== numB) {
+                return parseInt(numA) - parseInt(numB);
+            }
+            
+            // 숫자가 같은 경우 문자열 정렬
+            return a.localeCompare(b);
+        }
+
+        // ACE 탭 종속 옵션 업데이트 함수
+        function updateDependentOptions(tabName) {
+            if (!state[tabName].db || !state[tabName].tableInfo) return;
+
+            const frameValue = document.getElementById(`${tabName}_frame`).value;
+            const mattressValue = document.getElementById(`${tabName}_mattress`).value;
+
+            // 프레임이 선택된 경우: 해당 프레임에 맞는 타입과 사이즈 표시
+            if (frameValue) {
+                updateTypeOptions(tabName, frameValue);
+                updateSizeOptionsByFrame(tabName, frameValue);
+            }
+            // 프레임이 선택되지 않고 매트리스가 선택된 경우: 해당 매트리스에 맞는 사이즈 표시
+            else if (mattressValue) {
+                updateSizeOptionsByMattress(tabName, mattressValue);
+            }
+            // 아무것도 선택되지 않은 경우: 모든 옵션 표시
+            else {
+                resetDependentOptions(tabName);
+            }
+        }
+
+        function updateTypeOptions(tabName, frameValue) {
+            const frameCol = findMatchingColumn('frame', tabName);
+            const typeCol = findMatchingColumn('type', tabName);
+            
+            if (!frameCol || !typeCol) return;
+
+            const actualFrameCol = getActualColumnName(frameCol, tabName);
+            const actualTypeCol = getActualColumnName(typeCol, tabName);
+            const safeFrameCol = getSafeColumnName(actualFrameCol);
+            const safeTypeCol = getSafeColumnName(actualTypeCol);
+
+            try {
+                const query = `SELECT DISTINCT ${safeTypeCol} FROM ${state[tabName].tableInfo.name} WHERE ${safeFrameCol} = ? AND ${safeTypeCol} IS NOT NULL AND ${safeTypeCol} != '' ORDER BY ${safeTypeCol}`;
+                const result = state[tabName].db.exec(query, [frameValue]);
+
+                const selectElement = document.getElementById(`${tabName}_type`);
+                const currentValue = selectElement.value;
+                selectElement.innerHTML = '<option value="">전체</option>';
+
+                if (result.length > 0 && result[0].values.length > 0) {
+                    const uniqueValues = [];
+                    result[0].values.forEach(row => {
+                        const value = row[0];
+                        if (value && value.toString().trim() !== '') {
+                            uniqueValues.push(value.toString().trim());
+                        }
+                    });
+
+                    const sortedUniqueValues = [...new Set(uniqueValues)].sort();
+                    
+                    sortedUniqueValues.forEach(value => {
+                        const option = document.createElement('option');
+                        option.value = value;
+                        option.textContent = value;
+                        if (value === currentValue) {
+                            option.selected = true;
+                        }
+                        selectElement.appendChild(option);
+                    });
+
+                    const fieldNote = selectElement.parentNode.querySelector('.field-note');
+                    if (fieldNote) {
+                        fieldNote.textContent = `프레임 선택시 해당 타입 표시 (${sortedUniqueValues.length}개)`;
+                    }
+                } else {
+                    const fieldNote = selectElement.parentNode.querySelector('.field-note');
+                    if (fieldNote) {
+                        fieldNote.textContent = '해당 프레임에 맞는 타입이 없습니다';
+                    }
+                }
+            } catch (error) {
+                console.error('Error updating type options:', error);
+            }
+        }
+
+        function updateSizeOptionsByFrame(tabName, frameValue) {
+            const frameCol = findMatchingColumn('frame', tabName);
+            const sizeCol = findMatchingColumn('size', tabName);
+            
+            if (!frameCol || !sizeCol) return;
+
+            const actualFrameCol = getActualColumnName(frameCol, tabName);
+            const actualSizeCol = getActualColumnName(sizeCol, tabName);
+            const safeFrameCol = getSafeColumnName(actualFrameCol);
+            const safeSizeCol = getSafeColumnName(actualSizeCol);
+
+            try {
+                const query = `SELECT DISTINCT ${safeSizeCol} FROM ${state[tabName].tableInfo.name} WHERE ${safeFrameCol} = ? AND ${safeSizeCol} IS NOT NULL AND ${safeSizeCol} != '' ORDER BY ${safeSizeCol}`;
+                const result = state[tabName].db.exec(query, [frameValue]);
+
+                const selectElement = document.getElementById(`${tabName}_size`);
+                const currentValue = selectElement.value;
+                selectElement.innerHTML = '<option value="">전체</option>';
+
+                if (result.length > 0 && result[0].values.length > 0) {
+                    const uniqueValues = [];
+                    result[0].values.forEach(row => {
+                        const value = row[0];
+                        if (value && value.toString().trim() !== '') {
+                            uniqueValues.push(value.toString().trim());
+                        }
+                    });
+
+                    const sortedUniqueValues = [...new Set(uniqueValues)].sort();
+                    
+                    sortedUniqueValues.forEach(value => {
+                        const option = document.createElement('option');
+                        option.value = value;
+                        option.textContent = value;
+                        if (value === currentValue) {
+                            option.selected = true;
+                        }
+                        selectElement.appendChild(option);
+                    });
+
+                    const fieldNote = selectElement.parentNode.querySelector('.field-note');
+                    if (fieldNote) {
+                        fieldNote.textContent = `프레임 선택시 해당 사이즈 표시 (${sortedUniqueValues.length}개)`;
+                    }
+                } else {
+                    const fieldNote = selectElement.parentNode.querySelector('.field-note');
+                    if (fieldNote) {
+                        fieldNote.textContent = '해당 프레임에 맞는 사이즈가 없습니다';
+                    }
+                }
+            } catch (error) {
+                console.error('Error updating size options by frame:', error);
+            }
+        }
+
+        function updateSizeOptionsByMattress(tabName, mattressValue) {
+            const mattressCol = findMatchingColumn('mattress', tabName);
+            const sizeCol = findMatchingColumn('size', tabName);
+            
+            if (!mattressCol || !sizeCol) return;
+
+            const actualMattressCol = getActualColumnName(mattressCol, tabName);
+            const actualSizeCol = getActualColumnName(sizeCol, tabName);
+            const safeMattressCol = getSafeColumnName(actualMattressCol);
+            const safeSizeCol = getSafeColumnName(actualSizeCol);
+
+            try {
+                const query = `SELECT DISTINCT ${safeSizeCol} FROM ${state[tabName].tableInfo.name} WHERE ${safeMattressCol} = ? AND ${safeSizeCol} IS NOT NULL AND ${safeSizeCol} != '' ORDER BY ${safeSizeCol}`;
+                const result = state[tabName].db.exec(query, [mattressValue]);
+
+                const selectElement = document.getElementById(`${tabName}_size`);
+                const currentValue = selectElement.value;
+                selectElement.innerHTML = '<option value="">전체</option>';
+
+                if (result.length > 0 && result[0].values.length > 0) {
+                    const uniqueValues = [];
+                    result[0].values.forEach(row => {
+                        const value = row[0];
+                        if (value && value.toString().trim() !== '') {
+                            uniqueValues.push(value.toString().trim());
+                        }
+                    });
+
+                    const sortedUniqueValues = [...new Set(uniqueValues)].sort();
+                    
+                    sortedUniqueValues.forEach(value => {
+                        const option = document.createElement('option');
+                        option.value = value;
+                        option.textContent = value;
+                        if (value === currentValue) {
+                            option.selected = true;
+                        }
+                        selectElement.appendChild(option);
+                    });
+
+                    const fieldNote = selectElement.parentNode.querySelector('.field-note');
+                    if (fieldNote) {
+                        fieldNote.textContent = `매트리스 선택시 해당 사이즈 표시 (${sortedUniqueValues.length}개)`;
+                    }
+                } else {
+                    const fieldNote = selectElement.parentNode.querySelector('.field-note');
+                    if (fieldNote) {
+                        fieldNote.textContent = '해당 매트리스에 맞는 사이즈가 없습니다';
+                    }
+                }
+            } catch (error) {
+                console.error('Error updating size options by mattress:', error);
+            }
+        }
+
+        function resetDependentOptions(tabName) {
+            // 타입 옵션 초기화
+            const typeSelect = document.getElementById(`${tabName}_type`);
+            typeSelect.innerHTML = '<option value="">전체</option>';
+            const typeFieldNote = typeSelect.parentNode.querySelector('.field-note');
+            if (typeFieldNote) {
+                typeFieldNote.textContent = '프레임 선택 시 연동됨';
+            }
+
+            // 사이즈 옵션 초기화
+            const sizeSelect = document.getElementById(`${tabName}_size`);
+            sizeSelect.innerHTML = '<option value="">전체</option>';
+            const sizeFieldNote = sizeSelect.parentNode.querySelector('.field-note');
+            if (sizeFieldNote) {
+                sizeFieldNote.textContent = '프레임 또는 매트리스 선택 시 연동됨';
+            }
+
+            // 모든 옵션 다시 채우기
+            populateAllOptions(tabName);
+        }
+
+        function populateAllOptions(tabName) {
+            const fieldMapping = CONFIG.FIELD_MAPPING[tabName];
+            
+            Object.keys(fieldMapping).forEach(fieldKey => {
+                if (fieldKey !== 'type' && fieldKey !== 'size') { // type과 size는 별도로 처리
+                    const matchedCol = findMatchingColumn(fieldKey, tabName);
+                    if (matchedCol) {
+                        const actualCol = getActualColumnName(matchedCol, tabName);
+                        const safeCol = getSafeColumnName(actualCol);
+                        
+                        try {
+                            const query = `SELECT DISTINCT ${safeCol} FROM ${state[tabName].tableInfo.name} WHERE ${safeCol} IS NOT NULL AND ${safeCol} != '' ORDER BY ${safeCol}`;
+                            const result = state[tabName].db.exec(query);
+                            
+                            const selectElement = document.getElementById(`${tabName}_${fieldKey}`);
+                            const currentValue = selectElement.value;
+                            selectElement.innerHTML = '<option value="">전체</option>';
+                            
+                            if (result.length > 0 && result[0].values.length > 0) {
+                                const uniqueValues = [];
+                                result[0].values.forEach(row => {
+                                    const value = row[0];
+                                    if (value && value.toString().trim() !== '') {
+                                        uniqueValues.push(value.toString().trim());
+                                    }
+                                });
+                                
+                                const sortedUniqueValues = [...new Set(uniqueValues)].sort();
+                                
+                                sortedUniqueValues.forEach(value => {
+                                    const option = document.createElement('option');
+                                    option.value = value;
+                                    option.textContent = value;
+                                    if (value === currentValue) {
+                                        option.selected = true;
+                                    }
+                                    selectElement.appendChild(option);
+                                });
+                                
+                                const fieldNote = selectElement.parentNode.querySelector('.field-note');
+                                if (fieldNote && fieldKey !== 'frame' && fieldKey !== 'mattress') {
+                                    fieldNote.textContent = `총 ${sortedUniqueValues.length}개 옵션`;
+                                }
+                            }
+                        } catch (error) {
+                            console.error(`Error populating ${fieldKey}:`, error);
+                        }
+                    }
+                }
+            });
+            
+            // SIZE 옵션 별도 처리
+            populateSizeOptions(tabName);
+        }
+
+        function populateSizeOptions(tabName) {
+            const sizeSelect = document.getElementById(`${tabName}_size`);
+            sizeSelect.innerHTML = '<option value="">전체</option>';
+            
+            if (!state[tabName].db || !state[tabName].tableInfo) return;
+            
+            const matchedCol = findMatchingColumn('size', tabName);
+            if (matchedCol) {
+                const actualCol = getActualColumnName(matchedCol, tabName);
+                const safeCol = getSafeColumnName(actualCol);
+                
+                try {
+                    const query = `SELECT DISTINCT ${safeCol} FROM ${state[tabName].tableInfo.name} 
+                                 WHERE ${safeCol} IS NOT NULL AND TRIM(${safeCol}) != '' 
+                                 ORDER BY ${safeCol}`;
+                    
+                    const result = state[tabName].db.exec(query);
+                    
+                    if (result.length > 0 && result[0].values.length > 0) {
+                        const uniqueValues = [];
+                        result[0].values.forEach(row => {
+                            const value = row[0];
+                            if (value && value.toString().trim() !== '') {
+                                const normalized = normalizeSizeValue(value.toString().trim());
+                                if (normalized) {
+                                    uniqueValues.push(normalized);
+                                }
+                            }
+                        });
+                        
+                        const sortedUniqueValues = [...new Set(uniqueValues)].sort(compareSizeValues);
+                        
+                        sortedUniqueValues.forEach(value => {
+                            const option = document.createElement('option');
+                            option.value = value;
+                            option.textContent = value;
+                            sizeSelect.appendChild(option);
+                        });
+                        
+                        const fieldNote = sizeSelect.parentNode.querySelector('.field-note');
+                        if (fieldNote) {
+                            fieldNote.textContent = `총 ${sortedUniqueValues.length}개 옵션`;
+                        }
+                    }
+                } catch (error) {
+                    console.error(`Error populating size for ${tabName}:`, error);
+                }
+            }
+        }
+
+        // 탭 전환
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+        }
+
+        // 초기화
+        function initTab(tabName) {
+            const uploadArea = document.getElementById(`uploadArea-${tabName}`);
+            const fileInput = document.getElementById(`fileInput-${tabName}`);
+            
+            uploadArea.addEventListener('click', () => fileInput.click());
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.style.backgroundColor = '#f0f0f0';
+            });
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.style.backgroundColor = '';
+            });
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.style.backgroundColor = '';
+                if (e.dataTransfer.files[0]) handleFileUpload(e.dataTransfer.files[0], tabName);
+            });
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files[0]) handleFileUpload(e.target.files[0], tabName);
+            });
+        }
+
+        function handleFileUpload(file, tabName) {
+            if (!CONFIG.ALLOWED_EXTENSIONS.test(file.name)) {
+                showStatus('SQLite 데이터베이스 파일(.db, .sqlite, .sqlite3)만 업로드 가능합니다.', 'error', tabName);
+                return;
+            }
+            showStatus('파일을 읽는 중...', 'info', tabName);
+            
+            const reader = new FileReader();
+            reader.onload = e => loadDatabase(e.target.result, file.name, tabName);
+            reader.onerror = () => showStatus('파일 읽기 중 오류가 발생했습니다.', 'error', tabName);
+            reader.readAsArrayBuffer(file);
+        }
+
+        async function loadDatabase(arrayBuffer, fileName, tabName) {
+            try {
+                showStatus('SQL.js 라이브러리를 로드 중...', 'info', tabName);
+                if (typeof initSqlJs === 'undefined') {
+                    await new Promise((resolve, reject) => {
+                        const script = document.createElement('script');
+                        script.src = `${CONFIG.SQLJSCDN}/sql-wasm.js`;
+                        script.onload = resolve;
+                        script.onerror = reject;
+                        document.head.appendChild(script);
+                    });
+                }
+                
+                const SQL = await initSqlJs({
+                    locateFile: file => `${CONFIG.SQLJSCDN}/${file}`
+                });
+                
+                state[tabName].db = new SQL.Database(new Uint8Array(arrayBuffer));
+                state[tabName].fileName = fileName;
+                
+                analyzeDatabase(tabName);
+            } catch (error) {
+                showStatus('데이터베이스 로드 실패: ' + error.message, 'error', tabName);
+            }
+        }
+
+        function analyzeDatabase(tabName) {
+            try {
+                const targetTable = CONFIG.TABLE_CONFIG[tabName];
+                
+                // 지정된 테이블이 존재하는지 확인
+                const tableCheck = state[tabName].db.exec(
+                    `SELECT name FROM sqlite_master WHERE type='table' AND name='${targetTable}'`
+                );
+                
+                if (!tableCheck.length || !tableCheck[0].values.length) {
+                    showStatus(`데이터베이스에 ${targetTable} 테이블이 없습니다.`, 'error', tabName);
+                    return;
+                }
+
+                const columns = state[tabName].db.exec(`PRAGMA table_info(${targetTable})`);
+                
+                state[tabName].tableInfo = {
+                    name: targetTable,
+                    columns: columns[0].values.map(col => col[1])
+                };
+
+                const rowCount = state[tabName].db.exec(`SELECT COUNT(*) FROM ${targetTable}`);
+                const count = rowCount[0].values[0][0];
+                
+                // 테이블 샘플 데이터 확인 (디버깅용)
+                try {
+                    const sampleData = state[tabName].db.exec(`SELECT * FROM ${targetTable} LIMIT 1`);
+                    if (sampleData.length > 0 && sampleData[0].columns) {
+                        console.log(`[${tabName}] 테이블 컬럼:`, sampleData[0].columns);
+                    }
+                } catch (e) {
+                    console.log('샘플 데이터 조회 실패:', e);
+                }
+
+                showStatus(`"${state[tabName].fileName}" 로드 완료! 옵션을 불러오는 중...`, 'info', tabName);
+                displayDatabaseInfo(targetTable, count, tabName);
+                
+                if (tabName === 'essa') {
+                    populateAllEssaOptions();
+                } else {
+                    populateAllOptions(tabName);
+                }
+                
+                document.getElementById(`searchForm-${tabName}`).style.display = 'grid';
+                showStatus(`"${state[tabName].fileName}" 로드 완료! 검색이 가능합니다.`, 'success', tabName);
+            } catch (error) {
+                showStatus('데이터베이스 분석 오류: ' + error.message, 'error', tabName);
+            }
+        }
+
+        function displayDatabaseInfo(tableName, count, tabName) {
+            document.getElementById(`dbInfo-${tabName}`).innerHTML = `
+                <h4>데이터베이스 정보</h4>
+                <p>테이블: ${tableName} | 레코드 수: ${count}개</p>
+                <p>컬럼: ${state[tabName].tableInfo.columns.join(', ')}</p>
+            `;
+            document.getElementById(`dbInfo-${tabName}`).style.display = 'block';
+        }
+
+        function showStatus(message, type, tabName) {
+            document.getElementById(`statusMessage-${tabName}`).innerHTML = 
+                `<div class="status-message ${type}">${message}</div>`;
+        }
+
+        function searchProducts(tabName) {
+            if (!state[tabName].db || !state[tabName].tableInfo) {
+                showStatus('먼저 데이터베이스 파일을 업로드해주세요.', 'error', tabName);
+                return;
+            }
+
+            document.getElementById(`loading-${tabName}`).style.display = 'block';
+            document.getElementById(`results-container-${tabName}`).innerHTML = '';
+            
+            setTimeout(() => {
+                try {
+                    const searchParams = {};
+                    const fieldMapping = CONFIG.FIELD_MAPPING[tabName];
+                    
+                    Object.keys(fieldMapping).forEach(key => {
+                        const value = document.getElementById(`${tabName}_${key}`).value;
+                        if (value) searchParams[key] = value;
+                    });
+                    
+                    const products = performSearch(searchParams, tabName);
+                    state[tabName].currentProducts = products;
+                    state[tabName].currentSort = 'none';
+                    displayResults(products, tabName);
+                } catch (error) {
+                    document.getElementById(`results-container-${tabName}`).innerHTML = 
+                        `<div class="no-results">검색 중 오류: ${error.message}</div>`;
+                } finally {
+                    document.getElementById(`loading-${tabName}`).style.display = 'none';
+                }
+            }, 100);
+        }
+
+        function performSearch(searchParams, tabName) {
+            let query = `SELECT * FROM ${state[tabName].tableInfo.name} WHERE 1=1`;
+            const params = [];
+            
+            // ESSA 탭과 ACE 탭에 대한 검색 로직 분리
+            if (tabName === 'essa') {
+                // ESSA 탭: 일반 AND 조건으로 모든 필터 적용
+                Object.entries(searchParams).forEach(([key, value]) => {
+                    const matchedCol = findMatchingColumn(key, tabName);
+                    if (matchedCol) {
+                        const actualCol = getActualColumnName(matchedCol, tabName);
+                        const safeCol = getSafeColumnName(actualCol);
+                        
+                        query += ` AND ${safeCol} = ?`;
+                        params.push(value);
+                    }
+                });
+            } else if (tabName === 'ace') {
+                // ACE 탭: 논리적 검색 조건 적용
+                const frameValue = searchParams.frame;
+                const typeValue = searchParams.type;
+                const mattressValue = searchParams.mattress;
+                const sizeValue = searchParams.size;
+                
+                // 프레임과 타입이 모두 선택된 경우: (프레임 AND 타입)
+                if (frameValue && typeValue) {
+                    const frameCol = findMatchingColumn('frame', tabName);
+                    const typeCol = findMatchingColumn('type', tabName);
+                    if (frameCol && typeCol) {
+                        const actualFrameCol = getActualColumnName(frameCol, tabName);
+                        const actualTypeCol = getActualColumnName(typeCol, tabName);
+                        const safeFrameCol = getSafeColumnName(actualFrameCol);
+                        const safeTypeCol = getSafeColumnName(actualTypeCol);
+                        
+                        query += ` AND ((${safeFrameCol} = ? AND ${safeTypeCol} = ?)`;
+                        params.push(frameValue, typeValue);
+                        
+                        // 매트리스가 선택된 경우: OR 매트리스
+                        if (mattressValue) {
+                            const mattressCol = findMatchingColumn('mattress', tabName);
+                            if (mattressCol) {
+                                const actualMattressCol = getActualColumnName(mattressCol, tabName);
+                                const safeMattressCol = getSafeColumnName(actualMattressCol);
+                                query += ` OR ${safeMattressCol} = ?`;
+                                params.push(mattressValue);
+                            }
+                        }
+                        query += `)`;
+                    }
+                } 
+                // 프레임만 선택된 경우
+                else if (frameValue && !typeValue) {
+                    const frameCol = findMatchingColumn('frame', tabName);
+                    if (frameCol) {
+                        const actualFrameCol = getActualColumnName(frameCol, tabName);
+                        const safeFrameCol = getSafeColumnName(actualFrameCol);
+                        query += ` AND (${safeFrameCol} = ?`;
+                        params.push(frameValue);
+                        
+                        // 매트리스가 선택된 경우: OR 매트리스
+                        if (mattressValue) {
+                            const mattressCol = findMatchingColumn('mattress', tabName);
+                            if (mattressCol) {
+                                const actualMattressCol = getActualColumnName(mattressCol, tabName);
+                                const safeMattressCol = getSafeColumnName(actualMattressCol);
+                                query += ` OR ${safeMattressCol} = ?`;
+                                params.push(mattressValue);
+                            }
+                        }
+                        query += `)`;
+                    }
+                }
+                // 타입만 선택된 경우
+                else if (!frameValue && typeValue) {
+                    const typeCol = findMatchingColumn('type', tabName);
+                    if (typeCol) {
+                        const actualTypeCol = getActualColumnName(typeCol, tabName);
+                        const safeTypeCol = getSafeColumnName(actualTypeCol);
+                        query += ` AND (${safeTypeCol} = ?`;
+                        params.push(typeValue);
+                        
+                        // 매트리스가 선택된 경우: OR 매트리스
+                        if (mattressValue) {
+                            const mattressCol = findMatchingColumn('mattress', tabName);
+                            if (mattressCol) {
+                                const actualMattressCol = getActualColumnName(mattressCol, tabName);
+                                const safeMattressCol = getSafeColumnName(actualMattressCol);
+                                query += ` OR ${safeMattressCol} = ?`;
+                                params.push(mattressValue);
+                            }
+                        }
+                        query += `)`;
+                    }
+                }
+                // 프레임과 타입이 모두 선택되지 않고 매트리스만 선택된 경우
+                else if (mattressValue) {
+                    const mattressCol = findMatchingColumn('mattress', tabName);
+                    if (mattressCol) {
+                        const actualMattressCol = getActualColumnName(mattressCol, tabName);
+                        const safeMattressCol = getSafeColumnName(actualMattressCol);
+                        query += ` AND ${safeMattressCol} = ?`;
+                        params.push(mattressValue);
+                    }
+                }
+                
+                // 사이즈 조건: AND 사이즈
+                if (sizeValue) {
+                    const sizeCol = findMatchingColumn('size', tabName);
+                    if (sizeCol) {
+                        const actualSizeCol = getActualColumnName(sizeCol, tabName);
+                        const safeSizeCol = getSafeColumnName(actualSizeCol);
+                        query += ` AND ${safeSizeCol} = ?`;
+                        params.push(sizeValue);
+                    }
+                }
+                
+                // 나머지 조건들 (협탁, 사이드보드, 연계 품목 등)은 일반 AND 조건으로 추가
+                Object.entries(searchParams).forEach(([key, value]) => {
+                    if (key !== 'frame' && key !== 'type' && key !== 'mattress' && key !== 'size') {
+                        const matchedCol = findMatchingColumn(key, tabName);
+                        if (matchedCol) {
+                            const actualCol = getActualColumnName(matchedCol, tabName);
+                            const safeCol = getSafeColumnName(actualCol);
+                            query += ` AND ${safeCol} = ?`;
+                            params.push(value);
+                        }
+                    }
+                });
+            }
+            
+            try {
+                const stmt = state[tabName].db.prepare(query);
+                stmt.bind(params);
+                
+                const products = [];
+                while (stmt.step()) {
+                    products.push(stmt.getAsObject());
+                }
+                
+                stmt.free();
+                console.log(`[${tabName}] 검색 결과:`, products.length, '개');
+                return products;
+            } catch (error) {
+                console.error('Search query error:', error, query, params);
+                return [];
+            }
+        }
+
+        function findMatchingColumn(fieldKey, tabName) {
+            const fieldMapping = CONFIG.FIELD_MAPPING[tabName];
+            if (!fieldMapping[fieldKey]) {
+                console.log(`필드 ${fieldKey}가 매핑에 없음`);
+                return null;
+            }
+            
+            const possibleNames = fieldMapping[fieldKey];
+            
+            // 대소문자 무시하고 정확히 매칭
+            let matched = possibleNames.find(name => 
+                state[tabName].tableInfo.columns.some(col => 
+                    col.toUpperCase() === name.toUpperCase()
+                )
+            );
+            
+            // 정확한 매칭이 안되면 부분 매칭 시도
+            if (!matched && fieldKey === 'size') {
+                // "사이즈"나 "SIZE"가 포함된 컬럼 찾기
+                matched = state[tabName].tableInfo.columns.find(col => 
+                    col.toUpperCase().includes('SIZE') || col.includes('사이즈')
+                );
+                
+                if (matched) {
+                    console.log(`${tabName} 부분 매칭으로 SIZE 컬럼 찾음:`, matched);
+                }
+            }
+            
+            return matched;
+        }
+
+        function getActualColumnName(matchedCol, tabName) {
+            const actual = state[tabName].tableInfo.columns.find(col => 
+                col.toUpperCase() === matchedCol.toUpperCase()
+            );
+            
+            if (!actual) {
+                console.log(`컬럼 ${matchedCol}을 실제 컬럼에서 찾지 못함`);
+                // 부분 매칭으로 찾기 시도
+                return state[tabName].tableInfo.columns.find(col => 
+                    col.includes(matchedCol) || matchedCol.includes(col)
+                ) || matchedCol;
+            }
+            
+            return actual;
+        }
+
+        function getSafeColumnName(colName) {
+            return /[ -]/.test(colName) ? `[${colName}]` : colName;
+        }
+
+        function handleSort(sortType, tabName) {
+            if (state[tabName].currentProducts.length === 0) return;
+            
+            state[tabName].currentSort = sortType;
+            let sortedProducts = [...state[tabName].currentProducts];
+            
+            if (sortType === 'asc' || sortType === 'desc') {
+                sortedProducts.sort((a, b) => {
+                    const priceA = getPriceValue(a);
+                    const priceB = getPriceValue(b);
+                    return sortType === 'asc' ? priceA - priceB : priceB - priceA;
+                });
+            }
+            
+            displayResults(sortedProducts, tabName);
+        }
+
+        function getPriceValue(product) {
+            const priceKeys = ['판매가', 'PRICE', 'SALE_PRICE', '가격', '금액'];
+            for (const key of priceKeys) {
+                const foundKey = Object.keys(product).find(k => 
+                    k.toUpperCase() === key.toUpperCase()
+                );
+                if (foundKey && product[foundKey]) {
+                    const value = product[foundKey];
+                    const num = typeof value === 'string' ? parseInt(value.replace(/,/g, '')) : value;
+                    return isNaN(num) ? 0 : num;
+                }
+            }
+            return 0;
+        }
+
+        function formatPrice(price) {
+            if (!price) return "0";
+            const num = typeof price === 'string' ? parseInt(price.replace(/,/g, '')) : price;
+            return isNaN(num) ? "0" : num.toLocaleString('ko-KR');
+        }
+
+        function findColumnValue(product, possibleKeys) {
+            for (const key of possibleKeys) {
+                const foundKey = Object.keys(product).find(k => 
+                    k.toUpperCase() === key.toUpperCase()
+                );
+                if (foundKey && product[foundKey]) {
+                    return product[foundKey];
+                }
+            }
+            return null;
+        }
+
+        function displayResults(products, tabName) {
+            if (products.length === 0) {
+                document.getElementById(`results-container-${tabName}`).innerHTML = 
+                    '<div class="no-results">검색 결과가 없습니다.</div>';
+                return;
+            }
+            
+            let sortHTML = `
+                <div class="sort-controls">
+                    <label for="sortSelect-${tabName}">정렬:</label>
+                    <select id="sortSelect-${tabName}" onchange="handleSort(this.value, '${tabName}')">
+                        <option value="none" ${state[tabName].currentSort === 'none' ? 'selected' : ''}>기본</option>
+                        <option value="asc" ${state[tabName].currentSort === 'asc' ? 'selected' : ''}>가격 낮은순</option>
+                        <option value="desc" ${state[tabName].currentSort === 'desc' ? 'selected' : ''}>가격 높은순</option>
+                    </select>
+                </div>
+            `;
+            
+            const displayColumns = CONFIG.DISPLAY_COLUMNS[tabName];
+            
+            let tableHTML = '<table><thead><tr>';
+            displayColumns.forEach(col => {
+                tableHTML += `<th>${col.label}</th>`;
+            });
+            tableHTML += '</tr></thead><tbody>';
+            
+            products.forEach(product => {
+                tableHTML += '<tr>';
+                displayColumns.forEach(col => {
+                    let value = findColumnValue(product, col.keys) || '-';
+                    if (col.label === '판매가') {
+                        value = formatPrice(value) + '원';
+                    }
+                    const priceClass = col.label === '판매가' ? ' class="price-value"' : '';
+                    tableHTML += `<td data-label="${col.label}"${priceClass}>${value}</td>`;
+                });
+                tableHTML += '</tr>';
+            });
+            
+            tableHTML += `</tbody></table>
+                <div style="margin-top: 10px; color: #666; font-size: 14px; text-align: center;">
+                    총 ${products.length}개의 제품이 검색되었습니다.
+                </div>`;
+            
+            document.getElementById(`results-container-${tabName}`).innerHTML = sortHTML + tableHTML;
+        }
+
+        function resetForm(tabName) {
+            const fieldMapping = CONFIG.FIELD_MAPPING[tabName];
+            Object.keys(fieldMapping).forEach(key => {
+                document.getElementById(`${tabName}_${key}`).value = '';
+            });
+            document.getElementById(`results-container-${tabName}`).innerHTML = '';
+            state[tabName].currentProducts = [];
+            state[tabName].currentSort = 'none';
+            
+            if (tabName === 'ace') {
+                resetDependentOptions(tabName);
+            } else {
+                resetEssaDependentOptions();
+            }
+        }
+
+        // 전역 함수 노출
+        window.switchTab = switchTab;
+        window.searchProducts = searchProducts;
+        window.resetForm = resetForm;
+        window.handleSort = handleSort;
+        window.updateDependentOptions = updateDependentOptions;
+        window.updateEssaDependentOptions = updateEssaDependentOptions;
+
+        // 초기화
+        initTab('essa');
+        initTab('ace');
+    </script>
+</body>
+</html>
