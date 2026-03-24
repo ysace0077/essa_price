@@ -1,0 +1,3768 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRICE_LIST</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+font-family: 'Nanum Gothic', sans-serif;
+}
+
+body {
+background-color: #f5f5f5;
+padding: 20px;
+}
+
+.container {
+max-width: 1200px;
+margin: 0 auto;
+background-color: white;
+border-radius: 8px;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+padding: 20px;
+}
+
+h1 {
+text-align: center;
+margin-bottom: 25px;
+color: #2c3e50;
+font-size: 36px;
+font-weight: 700;
+letter-spacing: 2px;
+font-family: 'Nanum Gothic', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+text-transform: uppercase;
+text-shadow: 0 2px 4px rgba(44, 62, 80, 0.1);
+}
+
+/* 공통 업로드 섹션 스타일 */
+.common-upload-section {
+margin-bottom: 25px;
+padding: 20px;
+background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+border-radius: 12px;
+box-shadow: 0 4px 15px rgba(108, 117, 125, 0.2);
+}
+
+/* 탭 스타일 */
+.tabs {
+display: flex;
+border-bottom: none;
+margin-bottom: 25px;
+gap: 10px;
+justify-content: center;
+}
+
+.tab {
+padding: 14px 40px;
+background-color: #fff;
+border: 2px solid #e0e0e0;
+border-radius: 50px;
+cursor: pointer;
+font-size: 16px;
+font-weight: 700;
+color: #666;
+transition: all 0.3s ease;
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.tab:hover {
+background-color: #f8f9fa;
+border-color: #6c757d;
+transform: translateY(-2px);
+box-shadow: 0 4px 12px rgba(108, 117, 125, 0.15);
+}
+
+.tab.active {
+background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+color: white;
+border-color: transparent;
+box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+transform: translateY(-2px);
+}
+
+.tab-content {
+display: none;
+}
+
+.tab-content.active {
+display: block;
+}
+
+.upload-area {
+text-align: center;
+padding: 15px 20px;
+cursor: pointer;
+transition: all 0.3s ease;
+min-height: 80px;
+display: flex;
+align-items: center;
+justify-content: center;
+background-color: rgba(255, 255, 255, 0.95);
+border-radius: 8px;
+border: 2px dashed rgba(255, 255, 255, 0.5);
+}
+
+.upload-area:hover {
+background-color: rgba(255, 255, 255, 1);
+border-color: rgba(255, 255, 255, 0.8);
+transform: scale(1.01);
+box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+}
+
+.upload-area i {
+font-size: 32px;
+margin-bottom: 8px;
+filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.upload-area h3 {
+font-size: 16px;
+margin-bottom: 4px;
+color: #2c3e50;
+font-weight: 700;
+}
+
+.upload-area p {
+font-size: 12px;
+margin: 2px 0;
+color: #555;
+}
+
+.file-input {
+display: none;
+}
+
+.file-info {
+margin-top: 10px;
+font-size: 14px;
+color: #666;
+}
+
+.db-info {
+margin-top: 15px;
+padding: 15px;
+background-color: rgba(255, 255, 255, 0.95);
+border-radius: 8px;
+display: none;
+font-size: 14px;
+border-left: 4px solid #4caf50;
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.db-info h4 {
+margin-bottom: 8px;
+color: #2c3e50;
+font-size: 16px;
+font-weight: 700;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.db-info h4:before {
+content: "✓";
+display: inline-block;
+width: 24px;
+height: 24px;
+background: #4caf50;
+color: white;
+border-radius: 50%;
+text-align: center;
+line-height: 24px;
+font-size: 14px;
+}
+
+.db-info p {
+margin: 6px 0;
+font-size: 13px;
+color: #555;
+padding-left: 32px;
+}
+
+.search-form {
+display: grid;
+grid-template-columns: repeat(5, 1fr);
+gap: 15px 20px;
+margin-bottom: 25px;
+padding: 25px;
+background: #f8f9fa;
+border-radius: 12px;
+display: none;
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+border: 1px solid #dee2e6;
+}
+
+.form-group {
+display: flex;
+flex-direction: column;
+}
+
+label {
+margin-bottom: 6px;
+font-weight: 700;
+color: #2c3e50;
+font-size: 14px;
+display: flex;
+align-items: center;
+gap: 6px;
+}
+
+label:before {
+content: "▸";
+color: #6c757d;
+font-size: 12px;
+}
+
+.field-note {
+font-size: 11px;
+color: #666;
+margin-top: 3px;
+margin-bottom: 6px;
+font-style: normal;
+background-color: rgba(255, 255, 255, 0.5);
+padding: 4px 8px;
+border-radius: 4px;
+}
+
+select,
+input[type="text"] {
+padding: 10px 12px;
+border: 2px solid #e0e0e0;
+border-radius: 8px;
+font-size: 14px;
+background-color: white;
+cursor: pointer;
+transition: all 0.3s ease;
+font-weight: 500;
+width: 100%;
+}
+
+select:hover,
+input[type="text"]:hover {
+border-color: #6c757d;
+box-shadow: 0 2px 8px rgba(108, 117, 125, 0.1);
+}
+
+select:focus,
+input[type="text"]:focus {
+outline: none;
+border-color: #6c757d;
+box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.08);
+cursor: text;
+}
+
+.buttons {
+display: flex;
+justify-content: center;
+gap: 10px;
+margin-top: 20px;
+grid-column: 1 / -1;
+}
+
+button {
+padding: 12px 32px;
+background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+color: white;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+font-weight: 700;
+font-size: 15px;
+transition: all 0.3s ease;
+box-shadow: 0 2px 8px rgba(108, 117, 125, 0.2);
+}
+
+button:hover {
+transform: translateY(-2px);
+box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+}
+
+button:active {
+transform: translateY(0);
+}
+
+.reset-btn {
+background: linear-gradient(135deg, #adb5bd 0%, #868e96 100%);
+box-shadow: 0 2px 8px rgba(173, 181, 189, 0.2);
+}
+
+.reset-btn:hover {
+box-shadow: 0 4px 12px rgba(173, 181, 189, 0.3);
+}
+
+.results {
+margin-top: 25px;
+}
+
+.results h2 {
+color: #2c3e50;
+font-size: 22px;
+font-weight: 800;
+margin-bottom: 15px;
+padding-bottom: 10px;
+border-bottom: 3px solid #6c757d;
+display: inline-block;
+}
+
+.sort-controls {
+display: flex;
+justify-content: flex-end;
+align-items: center;
+margin-bottom: 15px;
+gap: 12px;
+padding: 12px;
+background-color: #f8f9fa;
+border-radius: 8px;
+}
+
+.sort-controls label {
+font-size: 14px;
+color: #2c3e50;
+font-weight: 700;
+}
+
+.sort-controls select {
+padding: 8px 16px;
+border: 2px solid #e0e0e0;
+border-radius: 8px;
+font-size: 14px;
+cursor: pointer;
+font-weight: 500;
+background-color: white;
+transition: all 0.3s ease;
+width: auto;
+}
+
+.sort-controls select:hover {
+border-color: #6c757d;
+}
+
+table {
+width: 100%;
+border-collapse: separate;
+border-spacing: 0;
+margin-top: 15px;
+font-size: 14px;
+background-color: white;
+border-radius: 12px;
+overflow: hidden;
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+border: 1px solid #dee2e6;
+}
+
+th, td {
+padding: 18px 16px;
+text-align: left;
+border-bottom: 1px solid #e9ecef;
+word-break: keep-all;
+white-space: nowrap;
+}
+
+th {
+background: linear-gradient(135deg, #495057 0%, #343a40 100%);
+font-weight: 800;
+color: white;
+font-size: 14px;
+letter-spacing: 0.3px;
+text-align: center;
+vertical-align: middle;
+border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+th:last-child {
+border-right: none;
+}
+
+td {
+font-size: 14px;
+color: #212529;
+vertical-align: middle;
+}
+
+tbody tr {
+transition: all 0.2s ease;
+}
+
+tbody tr:hover {
+background-color: #f8f9fa;
+}
+
+tbody tr:nth-child(even) {
+background-color: #fafbfc;
+}
+
+tbody tr:nth-child(even):hover {
+background-color: #f1f3f5;
+}
+
+.price-value {
+color: #dc3545;
+font-weight: 800;
+font-size: 15px;
+text-align: right;
+}
+
+.no-results {
+text-align: center;
+padding: 40px 20px;
+color: #666;
+font-size: 16px;
+background: #f8f9fa;
+border-radius: 12px;
+margin: 20px 0;
+border: 1px solid #dee2e6;
+}
+
+.loading {
+text-align: center;
+padding: 30px;
+display: none;
+font-size: 18px;
+color: #6c757d;
+font-weight: 600;
+animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+0%, 100% {
+opacity: 1;
+}
+50% {
+opacity: 0.5;
+}
+}
+
+.status-message {
+text-align: center;
+padding: 14px 20px;
+margin: 12px 0;
+border-radius: 8px;
+font-size: 14px;
+font-weight: 500;
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+from {
+opacity: 0;
+transform: translateY(-10px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+
+.success {
+background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+color: #155724;
+border-left: 4px solid #28a745;
+}
+
+.error {
+background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+color: #721c24;
+border-left: 4px solid #dc3545;
+}
+
+.info {
+background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+color: #0c5460;
+border-left: 4px solid #17a2b8;
+}
+
+/* 합계 행 스타일 */
+.total-row {
+background: #f8f9fa !important;
+font-weight: 700;
+border-top: 3px solid #6c757d;
+box-shadow: 0 -2px 10px rgba(108, 117, 125, 0.1);
+}
+
+.total-label {
+text-align: right;
+color: #2c3e50;
+font-size: 16px;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+
+.total-amount {
+color: #dc3545;
+font-weight: 700;
+font-size: 18px;
+}
+
+/* 모바일 최적화 */
+@media screen and (max-width: 768px) {
+body {
+padding: 12px;
+}
+
+.container {
+padding: 15px;
+}
+
+h1 {
+font-size: 24px;
+margin-bottom: 20px;
+}
+
+.tabs {
+gap: 8px;
+flex-wrap: wrap;
+}
+
+.tab {
+padding: 12px 24px;
+font-size: 14px;
+flex: 1;
+min-width: 120px;
+}
+
+.search-form {
+grid-template-columns: 1fr;
+padding: 20px;
+gap: 15px;
+}
+
+.common-upload-section {
+padding: 15px;
+}
+
+.upload-area {
+padding: 12px 15px;
+min-height: 70px;
+}
+
+.upload-area i {
+font-size: 28px;
+}
+
+.upload-area h3 {
+font-size: 14px;
+}
+
+.results h2 {
+font-size: 18px;
+}
+
+.sort-controls {
+flex-direction: row;
+justify-content: flex-end;
+align-items: center;
+gap: 12px;
+padding: 12px;
+}
+
+.sort-controls label {
+text-align: left;
+}
+
+.sort-controls select {
+width: auto;
+}
+
+/* ESSA 탭에만 적용되는 모바일 테이블 스타일 */
+#essa-tab table {
+font-size: 13px;
+box-shadow: none;
+border: none;
+}
+
+#essa-tab table thead {
+display: none;
+}
+
+#essa-tab table, #essa-tab table tbody, #essa-tab table tr, #essa-tab table td {
+display: block;
+width: 100%;
+}
+
+#essa-tab tbody tr {
+margin-bottom: 20px;
+border: 2px solid #dee2e6;
+border-radius: 12px;
+padding: 18px;
+background: #ffffff;
+box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+#essa-tab tbody tr:hover {
+background: #f8f9fa;
+transform: none;
+box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+#essa-tab tbody tr:nth-child(even) {
+background: #ffffff;
+}
+
+#essa-tab tbody tr:nth-child(even):hover {
+background: #f8f9fa;
+}
+
+#essa-tab table td {
+padding: 10px 0;
+text-align: left !important;
+border-bottom: 1px solid #e9ecef;
+display: flex;
+align-items: flex-start;
+white-space: normal;
+word-break: break-word;
+font-weight: 400;
+line-height: 1.6;
+}
+
+#essa-tab table td:last-child {
+border-bottom: none;
+padding-bottom: 0;
+}
+
+#essa-tab table td:before {
+content: attr(data-label);
+display: inline-block;
+font-weight: 700;
+color: #495057;
+min-width: 90px;
+max-width: 90px;
+margin-right: 10px;
+flex-shrink: 0;
+}
+
+#essa-tab table td.price-value {
+text-align: left !important;
+}
+
+#essa-tab table td.price-value:before {
+content: attr(data-label);
+}
+
+/* ACE 탭도 ESSA 탭과 동일한 카드뷰 적용 */
+#ace-tab table {
+font-size: 13px;
+box-shadow: none;
+border: none;
+}
+
+#ace-tab table thead {
+display: none;
+}
+
+#ace-tab table, #ace-tab table tbody, #ace-tab table tr, #ace-tab table td {
+display: block;
+width: 100%;
+}
+
+#ace-tab tbody tr {
+margin-bottom: 20px;
+border: 2px solid #dee2e6;
+border-radius: 12px;
+padding: 18px;
+background: #ffffff;
+box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+#ace-tab tbody tr:hover {
+background: #f8f9fa;
+transform: none;
+box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+#ace-tab tbody tr:nth-child(even) {
+background: #ffffff;
+}
+
+#ace-tab tbody tr:nth-child(even):hover {
+background: #f8f9fa;
+}
+
+#ace-tab table td {
+padding: 10px 0;
+text-align: left !important;
+border-bottom: 1px solid #e9ecef;
+display: flex;
+align-items: flex-start;
+white-space: normal;
+word-break: break-word;
+font-weight: 400;
+line-height: 1.6;
+}
+
+#ace-tab table td:last-child {
+border-bottom: none;
+padding-bottom: 0;
+}
+
+#ace-tab table td:before {
+content: attr(data-label);
+display: inline-block;
+font-weight: 700;
+color: #495057;
+min-width: 90px;
+max-width: 90px;
+margin-right: 10px;
+flex-shrink: 0;
+}
+
+#ace-tab table td.price-value {
+text-align: left !important;
+}
+
+#ace-tab table td.price-value:before {
+content: attr(data-label);
+}
+
+/* ACE 탭 수량 입력 필드 모바일 스타일 */
+#ace-tab .quantity-input {
+width: 60px;
+padding: 6px 8px;
+font-size: 13px;
+border: 2px solid #6c757d;
+border-radius: 6px;
+text-align: center;
+font-weight: 600;
+}
+
+#ace-tab .quantity-input:focus {
+border-color: #495057;
+box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.1);
+outline: none;
+}
+
+/* ACE 탭 개별할인 입력 필드 모바일 스타일 */
+#ace-tab .individual-discount-input {
+width: 55px;
+padding: 6px 8px;
+font-size: 13px;
+border: 2px solid #17a2b8;
+border-radius: 6px;
+text-align: center;
+font-weight: 600;
+background-color: #f0fafc;
+}
+
+#ace-tab .individual-discount-input:focus {
+border-color: #138496;
+box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.1);
+outline: none;
+background-color: white;
+}
+
+/* 모바일 환경에서 모든 탭 카드뷰 적용 */
+
+/* ACE 탭 총 합계 스타일 - PC 환경 */
+#ace-tab .total-row {
+background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+border-top: 3px solid #6c757d;
+box-shadow: 0 2px 8px rgba(108, 117, 125, 0.1);
+}
+
+#ace-tab .total-row td {
+padding: 12px 8px !important;
+border-bottom: none !important;
+font-size: 14px;
+font-weight: 700;
+line-height: 1.3;
+vertical-align: middle;
+}
+
+/* 할인율 셀 (첫 번째 열) */
+#ace-tab .total-row td:first-child {
+text-align: center;
+background: #f8f9fa;
+width: 20%;
+}
+
+/* 총합계 라벨 (중간 열들) */
+#ace-tab .total-row .total-label {
+text-align: right;
+color: #2c3e50;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+padding-right: 16px;
+}
+
+/* 총합계 금액 (마지막 열) */
+#ace-tab .total-row td:last-child {
+text-align: right;
+color: #dc3545;
+font-weight: 800;
+padding-right: 16px;
+width: 20%;
+}
+
+#ace-tab .total-row td:before {
+content: none !important;
+display: none !important;
+}
+
+.total-row {
+margin-top: 20px;
+background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+border: 3px solid #6c757d;
+border-radius: 12px;
+padding: 20px;
+text-align: center;
+box-shadow: 0 4px 15px rgba(108, 117, 125, 0.2);
+}
+
+.total-row td {
+text-align: center !important;
+border: none;
+font-size: 16px;
+display: block !important;
+padding: 0 !important;
+}
+
+.total-row td:before {
+content: none !important;
+display: none !important;
+}
+
+.total-label {
+color: #2c3e50;
+font-size: 18px;
+font-weight: 800;
+margin-bottom: 0;
+display: inline !important;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+
+.total-amount {
+color: #dc3545;
+font-size: 24px;
+font-weight: 800;
+display: inline !important;
+margin-left: 10px;
+}
+
+.mobile-total-container {
+display: flex;
+justify-content: center;
+align-items: center;
+flex-wrap: nowrap;
+gap: 10px;
+}
+
+.mobile-total-text {
+color: #2c3e50;
+font-size: 18px;
+font-weight: 800;
+white-space: nowrap;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+
+.mobile-total-amount {
+color: #dc3545;
+font-size: 24px;
+font-weight: 800;
+white-space: nowrap;
+}
+
+
+
+
+}
+
+/* 수량 입력 필드 스타일 */
+.quantity-input {
+width: 70px;
+padding: 8px 12px;
+border: 2px solid #e0e0e0;
+border-radius: 6px;
+font-size: 14px;
+font-weight: 600;
+text-align: center;
+background-color: white;
+transition: all 0.3s ease;
+}
+
+.quantity-input:hover {
+border-color: #6c757d;
+box-shadow: 0 2px 8px rgba(108, 117, 125, 0.1);
+}
+
+.quantity-input:focus {
+outline: none;
+border-color: #6c757d;
+box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.08);
+}
+
+.quantity-cell {
+text-align: center;
+}
+
+.total-price {
+font-weight: 700;
+color: #dc3545;
+}
+
+/* 개별 할인율 입력 필드 스타일 */
+.individual-discount-input {
+width: 65px;
+padding: 8px 10px;
+border: 2px solid #17a2b8;
+border-radius: 6px;
+font-size: 14px;
+font-weight: 600;
+text-align: center;
+background-color: #f0fafc;
+transition: all 0.3s ease;
+}
+
+.individual-discount-input:hover {
+border-color: #138496;
+box-shadow: 0 2px 8px rgba(23, 162, 184, 0.15);
+}
+
+.individual-discount-input:focus {
+outline: none;
+border-color: #138496;
+box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.12);
+background-color: white;
+}
+
+
+
+/* 할인율 및 상품권 입력 필드 스타일 */
+.discount-input, .discount-input-pc, .regional-discount-input, .regional-discount-input-pc {
+width: 80px;
+padding: 6px 8px;
+border: 2px solid #e0e0e0;
+border-radius: 6px;
+font-size: 14px;
+font-weight: 600;
+text-align: center;
+background-color: white;
+transition: all 0.3s ease;
+margin: 0 4px;
+}
+
+.discount-input:hover, .discount-input-pc:hover, .regional-discount-input:hover, .regional-discount-input-pc:hover {
+border-color: #6c757d;
+box-shadow: 0 2px 8px rgba(108, 117, 125, 0.1);
+}
+
+.discount-input:focus, .discount-input-pc:focus, .regional-discount-input:focus, .regional-discount-input-pc:focus {
+outline: none;
+border-color: #6c757d;
+box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.08);
+}
+
+/* PC 환경 할인율 컨테이너 */
+.discount-container {
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 4px;
+font-size: 14px;
+font-weight: 700;
+color: #2c3e50;
+}
+
+.discount-cell {
+text-align: center;
+background: #f8f9fa;
+}
+
+/* 최적화된 ACE 탭 모바일 카드뷰 스타일 */
+@media screen and (max-width: 768px) {
+/* 기존 카드뷰와 통일된 할인율/상품권/총합계 카드 스타일 */
+.ace-mobile-summary-card, .essa-mobile-summary-card {
+margin-bottom: 20px;
+border: 2px solid #dee2e6;
+border-radius: 12px;
+padding: 18px;
+background: #ffffff;
+box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.ace-mobile-summary-card:hover, .essa-mobile-summary-card:hover {
+background: #f8f9fa;
+transform: none;
+box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.summary-row {
+padding: 10px 0;
+text-align: left !important;
+border-bottom: 1px solid #e9ecef;
+display: flex;
+align-items: flex-start;
+white-space: normal;
+word-break: break-word;
+font-weight: 400;
+line-height: 1.6;
+}
+
+.summary-row:last-child {
+border-bottom: none;
+padding-bottom: 0;
+}
+
+.summary-label {
+display: inline-block;
+font-weight: 700;
+color: #495057;
+min-width: 58px;
+max-width: 58px;
+margin-right: 4px;
+flex-shrink: 0;
+font-size: 13px;
+}
+
+.summary-input-group {
+display: flex;
+align-items: center;
+gap: 8px;
+flex: 1;
+}
+
+.summary-input {
+width: 70px;
+padding: 8px 12px;
+border: 2px solid #e0e0e0;
+border-radius: 6px;
+font-size: 14px;
+font-weight: 600;
+text-align: center;
+background-color: white;
+transition: all 0.3s ease;
+}
+
+.summary-input:hover {
+border-color: #6c757d;
+box-shadow: 0 2px 8px rgba(108, 117, 125, 0.1);
+}
+
+.summary-input:focus {
+outline: none;
+border-color: #6c757d;
+box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.08);
+}
+
+.summary-unit {
+font-size: 14px;
+font-weight: 700;
+color: #495057;
+}
+
+.summary-amount {
+font-size: 15px;
+font-weight: 800;
+color: #dc3545;
+text-align: left;
+flex: 1;
+}
+
+/* 리셋 버튼 스타일 */
+.reset-button {
+padding: 6px 12px;
+background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+color: white;
+border: none;
+border-radius: 6px;
+cursor: pointer;
+font-size: 12px;
+font-weight: 600;
+transition: all 0.3s ease;
+margin-left: 8px;
+min-width: 50px;
+}
+
+.reset-button:hover {
+background: linear-gradient(135deg, #5a6268 0%, #495057 100%);
+transform: translateY(-1px);
+box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+}
+
+.reset-button:active {
+transform: translateY(0);
+}
+
+/* PC 환경 총합계 가격 표시 스타일 */
+.total-price-container {
+display: flex;
+align-items: center;
+justify-content: flex-end;
+gap: 4px;
+}
+
+.original-price {
+color: #6c757d;
+font-size: 14px;
+font-weight: 600;
+}
+
+.price-separator {
+color: #6c757d;
+font-size: 14px;
+font-weight: 600;
+}
+
+.final-price {
+color: #dc3545;
+font-size: 18px;
+font-weight: 800;
+}
+
+/* 모바일 환경 총합계 가격 표시 스타일 */
+.summary-total-container {
+display: flex;
+align-items: center;
+gap: 2px;
+flex: 1;
+flex-wrap: nowrap;
+overflow: hidden;
+min-width: 0;
+}
+
+.summary-original-price {
+color: #6c757d;
+font-size: 11px;
+font-weight: 600;
+white-space: nowrap;
+flex-shrink: 1;
+overflow: hidden;
+text-overflow: ellipsis;
+min-width: 0;
+}
+
+.summary-separator {
+color: #6c757d;
+font-size: 11px;
+font-weight: 600;
+white-space: nowrap;
+flex-shrink: 0;
+}
+
+.summary-final-price {
+color: #dc3545;
+font-size: 13px;
+font-weight: 800;
+white-space: nowrap;
+flex-shrink: 0;
+}
+
+.discount-rate-display {
+white-space: nowrap;
+flex-shrink: 0;
+}
+
+/* 할인율 행 라벨 색상 */
+.summary-row:first-child .summary-label {
+color: #495057;
+}
+
+/* 상품권 행 라벨 색상 */
+.summary-row:nth-child(2) .summary-label {
+color: #495057;
+}
+
+/* 총합계 행 라벨 색상 */
+.summary-row:last-child .summary-label {
+color: #495057;
+}
+}
+
+/* 모바일에서 수량 입력 필드 */
+@media screen and (max-width: 768px) {
+.quantity-input {
+width: 60px;
+padding: 6px 8px;
+font-size: 13px;
+}
+
+.individual-discount-input {
+width: 55px;
+padding: 6px 8px;
+font-size: 13px;
+}
+
+.discount-input {
+width: 80px;
+padding: 8px 12px;
+font-size: 16px;
+border-radius: 8px;
+border: 2px solid #2196f3;
+font-weight: 600;
+background-color: white;
+text-align: center;
+}
+
+.discount-input:focus {
+border-color: #1976d2;
+box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+outline: none;
+}
+
+.discount-input:hover {
+border-color: #1976d2;
+box-shadow: 0 2px 8px rgba(33, 150, 243, 0.15);
+}
+
+.regional-discount-input {
+width: 80px;
+padding: 8px 12px;
+font-size: 16px;
+border-radius: 8px;
+border: 2px solid #ff9800;
+font-weight: 600;
+background-color: white;
+text-align: center;
+}
+
+.regional-discount-input:focus {
+border-color: #f57c00;
+box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+outline: none;
+}
+
+.regional-discount-input:hover {
+border-color: #f57c00;
+box-shadow: 0 2px 8px rgba(255, 152, 0, 0.15);
+}
+
+/* 모바일 할인율 행과 총합계 행 반응형 최적화 */
+.discount-row, .total-row {
+width: 100%;
+}
+
+.mobile-discount-container, .mobile-total-container {
+width: 100%;
+box-sizing: border-box;
+}
+
+/* 작은 화면에서도 기존 카드뷰와 동일한 스타일 유지 */
+@media screen and (max-width: 480px) {
+.ace-mobile-summary-card, .essa-mobile-summary-card {
+margin-bottom: 15px;
+padding: 12px;
+}
+
+.summary-row {
+padding: 8px 0;
+}
+
+.summary-label {
+min-width: 55px;
+max-width: 55px;
+font-size: 12px;
+}
+
+.summary-input {
+width: 60px;
+padding: 6px 10px;
+font-size: 13px;
+}
+
+.summary-unit {
+font-size: 13px;
+}
+
+.summary-amount {
+font-size: 14px;
+}
+
+.summary-original-price {
+font-size: 10px;
+}
+
+.summary-separator {
+font-size: 10px;
+}
+
+.summary-final-price {
+font-size: 12px;
+}
+
+.summary-total-container .discount-rate-display {
+font-size: 12px !important;
+}
+}
+
+/* 아주 작은 화면 최적화 */
+@media screen and (max-width: 360px) {
+.summary-label {
+min-width: 48px;
+max-width: 48px;
+font-size: 11px;
+}
+
+.summary-original-price {
+font-size: 9px;
+}
+
+.summary-final-price {
+font-size: 11px;
+}
+
+.summary-total-container .discount-rate-display {
+font-size: 11px !important;
+}
+
+.summary-total-container {
+gap: 1px;
+}
+}
+
+/* 중간 크기 화면 최적화 */
+@media screen and (min-width: 481px) and (max-width: 600px) {
+.ace-mobile-summary-card, .essa-mobile-summary-card {
+padding: 16px;
+}
+
+.summary-label {
+font-size: 14px;
+}
+
+.summary-input {
+width: 65px;
+padding: 7px 11px;
+font-size: 14px;
+}
+
+.summary-unit {
+font-size: 14px;
+}
+
+.summary-amount {
+font-size: 15px;
+}
+}
+
+/* 태블릿 최적화 */
+@media screen and (min-width: 601px) and (max-width: 768px) {
+.ace-mobile-summary-card, .essa-mobile-summary-card {
+padding: 18px;
+}
+
+.summary-label {
+font-size: 14px;
+}
+
+.summary-input {
+width: 70px;
+padding: 8px 12px;
+font-size: 14px;
+}
+
+.summary-unit {
+font-size: 14px;
+}
+
+.summary-amount {
+font-size: 15px;
+}
+}
+}
+
+/* ESSA 탭 모바일 카드뷰 최적화 */
+@media screen and (max-width: 768px) {
+.essa-mobile-summary-card {
+margin-bottom: 15px;
+padding: 12px;
+}
+
+.essa-mobile-summary-card .summary-row {
+padding: 6px 0;
+border-bottom: 1px solid #e9ecef;
+}
+
+.essa-mobile-summary-card .summary-row:last-child {
+border-bottom: none;
+padding-bottom: 0;
+}
+
+.essa-mobile-summary-card .summary-label {
+min-width: 65px;
+max-width: 65px;
+font-size: 13px;
+font-weight: 700;
+color: #495057;
+}
+
+.essa-mobile-summary-card .summary-input-group {
+gap: 4px;
+}
+
+/* 금액할인과 할인율 입력 필드 통일 디자인 */
+.essa-mobile-summary-card .summary-input {
+width: 85px;
+padding: 6px 8px;
+font-size: 13px;
+text-align: right;
+border: 1px solid #dee2e6;
+border-radius: 4px;
+background-color: #fff;
+font-weight: 600;
+transition: all 0.2s ease;
+}
+
+.essa-mobile-summary-card .summary-input:focus {
+outline: none;
+border-color: #6c757d;
+box-shadow: 0 0 0 2px rgba(108, 117, 125, 0.1);
+}
+
+.essa-mobile-summary-card .summary-input:hover {
+border-color: #adb5bd;
+}
+
+.essa-mobile-summary-card .summary-unit {
+font-size: 12px;
+font-weight: 600;
+color: #495057;
+min-width: 18px;
+}
+
+.essa-mobile-summary-card .reset-button {
+padding: 4px 8px;
+font-size: 10px;
+min-width: 40px;
+background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+color: white;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+font-weight: 600;
+transition: all 0.2s ease;
+}
+
+.essa-mobile-summary-card .reset-button:hover {
+background: linear-gradient(135deg, #5a6268 0%, #495057 100%);
+transform: translateY(-1px);
+box-shadow: 0 2px 4px rgba(108, 117, 125, 0.2);
+}
+
+.essa-mobile-summary-card .reset-button:active {
+transform: translateY(0);
+}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>PRICE_LIST</h1>
+
+<!-- 공통 업로드 섹션 (한 번만 업로드) -->
+<div class="common-upload-section">
+<div class="upload-area" id="uploadArea">
+<div>
+<i>📁</i>
+<h3>SQLite 데이터베이스 파일 업로드</h3>
+<p>클릭하거나 파일을 드래그하여 업로드하세요</p>
+<p class="file-info">지원 형식: .db, .sqlite, .sqlite3 (두 탭 모두 사용 가능)</p>
+</div>
+<input type="file" id="fileInput" class="file-input" accept=".db,.sqlite,.sqlite3">
+</div>
+<div id="statusMessage"></div>
+<div id="dbInfo" class="db-info"></div>
+</div>
+
+<!-- 탭 메뉴 -->
+<div class="tabs">
+<button class="tab active" onclick="switchTab('essa')">ESSA</button>
+<button class="tab" onclick="switchTab('ace')">ACE</button>
+</div>
+
+<!-- ESSA 탭 내용 -->
+<div id="essa-tab" class="tab-content active">
+<div class="search-form" id="searchForm-essa">
+<div class="form-group">
+<label for="essa_p_name">상품명</label>
+<div class="field-note">선택시 다른 옵션들이 필터링됨</div>
+<select id="essa_p_name" onchange="updateEssaDependentOptions('p_name')">
+<option value="">전체</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="essa_size">사이즈</label>
+<div class="field-note">상품명 선택시 해당 사이즈만 표시</div>
+<select id="essa_size" onchange="updateEssaDependentOptions('size')">
+<option value="">전체</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="essa_size_option">사이즈 옵션</label>
+<div class="field-note">상품명 선택시 해당 옵션만 표시</div>
+<select id="essa_size_option">
+<option value="">전체</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="essa_material">소재</label>
+<div class="field-note">상품명 선택시 해당 소재만 표시</div>
+<select id="essa_material" onchange="updateEssaDependentOptions('material')">
+<option value="">전체</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="essa_fabric">원단</label>
+<div class="field-note">소재 선택시 해당 원단만 표시</div>
+<select id="essa_fabric">
+<option value="">전체</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="essa_function">기능</label>
+<div class="field-note">상품명 선택시 해당 기능만 표시</div>
+<select id="essa_function">
+<option value="">전체</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="essa_stool">스툴 포함</label>
+<div class="field-note">상품명 선택시 해당 옵션만 표시</div>
+<select id="essa_stool">
+<option value="">전체</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="essa_style">스타일</label>
+<div class="field-note">상품명 선택시 해당 스타일만 표시</div>
+<select id="essa_style">
+<option value="">전체</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="essa_leather_option">가죽 옵션</label>
+<div class="field-note">상품명 선택시 해당 옵션만 표시</div>
+<select id="essa_leather_option">
+<option value="">전체</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="essa_event_product">행사 제품</label>
+<div class="field-note">상품명 선택시 해당 옵션만 표시</div>
+<select id="essa_event_product">
+<option value="">전체</option>
+</select>
+</div>
+
+<div class="buttons">
+<button onclick="searchProducts('essa')">검색</button>
+<button onclick="resetForm('essa')" class="reset-btn">초기화</button>
+</div>
+</div>
+
+<div class="loading" id="loading-essa">🔍 검색 중입니다...</div>
+
+<div class="results">
+<h2>검색 결과</h2>
+<div id="results-container-essa"></div>
+</div>
+</div>
+
+<!-- ACE 탭 내용 -->
+<div id="ace-tab" class="tab-content">
+<div class="search-form" id="searchForm-ace">
+<div class="form-group">
+<label for="ace_frame">프레임</label>
+<div class="field-note">프레임 선택시 해당 타입/사이즈 표시</div>
+<select id="ace_frame" onchange="updateDependentOptions('ace')">
+<option value="">전체</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="ace_type">타입</label>
+<div class="field-note">프레임 선택 시 연동됨</div>
+<select id="ace_type">
+<option value="">전체</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="ace_mattress">매트리스</label>
+<div class="field-note">프레임 미선택 시 사이즈와 연동됨</div>
+<select id="ace_mattress" onchange="updateDependentOptions('ace')">
+<option value="">전체</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="ace_size">사이즈</label>
+<div class="field-note">프레임/매트리스 선택 시 연동됨</div>
+<select id="ace_size">
+<option value="">전체</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="ace_foundation">파운데이션</label>
+<div class="field-note">파운데이션 타입 선택</div>
+<select id="ace_foundation">
+<option value="">전체</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="ace_related_items">연계 품목</label>
+<div class="field-note">프레임/매트리스와 독립적</div>
+<select id="ace_related_items">
+<option value="">전체</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="ace_nightstand">협탁</label>
+<div class="field-note">데이터베이스에서 자동 로드</div>
+<select id="ace_nightstand">
+<option value="">전체</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="ace_sideboard">사이드보드</label>
+<div class="field-note">데이터베이스에서 자동 로드</div>
+<select id="ace_sideboard">
+<option value="">전체</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="ace_furniture">가구</label>
+<div class="field-note">데이터베이스에서 자동 로드</div>
+<select id="ace_furniture">
+<option value="">전체</option>
+</select>
+</div>
+
+<div class="form-group">
+<label for="ace_category">구분</label>
+<div class="field-note">데이터베이스에서 자동 로드</div>
+<select id="ace_category">
+<option value="">전체</option>
+</select>
+</div>
+
+<div class="buttons">
+<button onclick="searchProducts('ace')">검색</button>
+<button onclick="resetForm('ace')" class="reset-btn">초기화</button>
+</div>
+</div>
+
+<div class="loading" id="loading-ace">🔍 검색 중입니다...</div>
+
+<div class="results">
+<h2>검색 결과</h2>
+<div id="results-container-ace"></div>
+</div>
+</div>
+</div>
+
+<script>
+const CONFIG = {
+SQLJSCDN: 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0',
+ALLOWED_EXTENSIONS: /\.(db|sqlite|sqlite3)$/i,
+// GitHub 자동 로드 설정 (사용자 수정 필요)
+GITHUB: {
+username: 'ysace0077',            // GitHub 사용자명
+repository: 'essa_price',         // 리포지토리명
+branch: 'main',                   // 브랜치명 (main 또는 master)
+dataFolder: 'data',               // 데이터 폴더명
+enabled: true                     // GitHub 자동 로드 활성화/비활성화
+},
+FIELD_MAPPING: {
+essa: {
+p_name: ['P_NAME', '상품명', 'PRODUCT_NAME', 'NAME'],
+size: ['SIZE', '사이즈'],
+size_option: ['SIZE 옵션', 'SIZE_OPTION', '사이즈옵션', '사이즈 옵션', 'SIZEOPTION'],
+material: ['MATERIAL', '소재'],
+fabric: ['FABRIC', '원단'],
+function: ['FUNCTION', '기능'],
+stool: ['스툴포함', 'STOOL', '스툴', '스툴 포함', 'STOOL 포함', 'STOOL포함'],
+style: ['STYLE', '스타일'],
+leather_option: ['가죽옵션', 'LEATHER_OPTION', '가죽 옵션', 'LEATHEROPTION'],
+event_product: ['행사제품', '행사 제품', 'EVENT_PRODUCT', 'EVENT', '이벤트']
+},
+ace: {
+frame: ['프레임', 'FRAME', 'FRAME_TYPE', '프레임타입'],
+type: ['타입', 'TYPE', 'TYPE_NM', 'BED_TYPE'],
+mattress: ['매트리스', 'MATTRESS', 'MATTRESS_TYPE', '매트리스타입'],
+foundation: ['파운데이션', 'FOUNDATION', 'FOUNDATION_TYPE', '파운데이션타입'],
+size: ['SIZE', '사이즈', 'BED_SIZE'],
+related_items: ['연계 품목', '연계품목', 'RELATED_ITEMS', '연계', 'RELATED_PRODUCTS', '연계품목코드', 'RELATED_ITEM_CODE'],
+nightstand: ['협탁', 'NIGHTSTAND', '협탁포함', 'NIGHTSTAND_YN'],
+sideboard: ['사이드보드', 'SIDEBOARD', '사이드보드포함', 'SIDEBOARD_YN'],
+furniture: ['가구', 'FURNITURE', 'FURNITURE_TYPE', '가구타입'],
+category: ['구분', 'CATEGORY', 'CATEGORY_NM', '분류']
+}
+},
+DISPLAY_COLUMNS: {
+essa: [
+{ keys: ['품목코드', 'PRODUCT_CODE', 'CODE', '코드'], label: '품목코드' },
+{ keys: ['상품명', 'P_NAME', 'PRODUCT_NAME', 'NAME'], label: '상품명' },
+{ keys: ['사이즈', 'SIZE'], label: '사이즈' },
+{ keys: ['판매가', 'PRICE', 'SALE_PRICE', '가격', 'PRICE_AMOUNT'], label: '판매가' },
+{ keys: ['행사제품', '행사 제품', 'EVENT_PRODUCT', 'EVENT', '이벤트'], label: '행사가' }
+],
+ace: [
+{ keys: ['구분', 'CATEGORY', 'CATEGORY_NM', '분류'], label: '구분' },
+{ keys: ['상품명', 'P_NAME', 'PRODUCT_NAME', 'NAME'], label: '상품명' },
+{ keys: ['사이즈', 'SIZE', 'BED_SIZE'], label: '사이즈' },
+{ keys: ['색상', 'COLOR', 'COLOR_NM', '색상명'], label: '색상' },
+{ keys: ['QUANTITY'], label: '수량' },
+{ keys: ['INDIVIDUAL_DISCOUNT'], label: '품목 할인' },
+{ keys: ['판매가', 'PRICE', 'SALE_PRICE', '가격', '금액', 'PRICE_AMOUNT', 'AMOUNT'], label: '판매가' }
+]
+},
+TABLE_CONFIG: {
+essa: 'DATA',
+ace: 'DATA_1'
+}
+};
+
+// 공유 데이터베이스 상태 (한 번만 로드)
+const state = {
+db: null,  // 공유 DB
+fileName: '',
+essa: { 
+tableInfo: null, 
+currentProducts: [], 
+currentSort: 'none',
+totalAmount: 0 
+},
+ace: { 
+tableInfo: null, 
+currentProducts: [], 
+currentSort: 'none', 
+totalAmount: 0,
+individualDiscountedTotal: 0 
+}
+};
+
+// 탭 전환
+function switchTab(tabName) {
+document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+event.target.classList.add('active');
+document.getElementById(`${tabName}-tab`).classList.add('active');
+}
+
+// 공통 업로드 초기화 (한 번만)
+function initUpload() {
+const uploadArea = document.getElementById('uploadArea');
+const fileInput = document.getElementById('fileInput');
+
+uploadArea.addEventListener('click', () => fileInput.click());
+
+uploadArea.addEventListener('dragover', (e) => {
+e.preventDefault();
+uploadArea.style.backgroundColor = '#f0f0f0';
+});
+
+uploadArea.addEventListener('dragleave', () => {
+uploadArea.style.backgroundColor = '';
+});
+
+uploadArea.addEventListener('drop', (e) => {
+e.preventDefault();
+uploadArea.style.backgroundColor = '';
+if (e.dataTransfer.files[0]) handleFileUpload(e.dataTransfer.files[0]);
+});
+
+fileInput.addEventListener('change', (e) => {
+if (e.target.files[0]) handleFileUpload(e.target.files[0]);
+});
+
+// 자동 데이터베이스 로드 시도
+tryAutoLoadDatabase();
+}
+
+// GitHub에서 데이터베이스 자동 로드 함수
+async function tryAutoLoadDatabase() {
+console.log('🔄 자동 데이터베이스 로드 시작');
+console.log('📋 GitHub 설정:', CONFIG.GITHUB);
+
+// GitHub 설정이 활성화되어 있고 올바르게 설정된 경우에만 시도
+if (!CONFIG.GITHUB.enabled) {
+console.log('❌ GitHub 자동 로드가 비활성화됨');
+showStatus('GitHub 자동 로드가 비활성화되어 있습니다. 로컬 파일을 확인 중...', 'info');
+await tryLocalDatabase();
+return;
+}
+
+if (CONFIG.GITHUB.username === 'YOUR_USERNAME' || CONFIG.GITHUB.repository === 'YOUR_REPOSITORY') {
+console.log('❌ GitHub 설정이 기본값으로 되어있음');
+showStatus('GitHub 설정이 필요합니다. 로컬 파일을 확인 중...', 'info');
+await tryLocalDatabase();
+return;
+}
+
+// GitHub Raw URL 생성
+const baseUrl = `https://raw.githubusercontent.com/${CONFIG.GITHUB.username}/${CONFIG.GITHUB.repository}/${CONFIG.GITHUB.branch}/${CONFIG.GITHUB.dataFolder}`;
+console.log('🔗 GitHub Base URL:', baseUrl);
+
+const defaultDbFiles = [
+'ESSA_DATA',         // 메인 ESSA 데이터베이스
+'ESSA_DATA.db',      // 확장자 포함 버전
+'data.db',           // 기본 파일명
+'database.db',       // 일반적인 파일명
+'price_data.db',     // 가격 데이터
+'products.db',       // 제품 데이터
+'sample.db'          // 샘플 데이터
+];
+
+// GitHub에서 파일 로드 시도
+for (const fileName of defaultDbFiles) {
+try {
+const githubUrl = `${baseUrl}/${fileName}`;
+console.log(`🔍 시도 중: ${githubUrl}`);
+showStatus(`GitHub에서 "${fileName}" 로드 시도 중...`, 'info');
+
+const response = await fetch(githubUrl);
+console.log(`📡 응답 상태: ${response.status} ${response.statusText}`);
+
+if (response.ok) {
+console.log(`✅ ${fileName} 로드 성공!`);
+const arrayBuffer = await response.arrayBuffer();
+console.log(`📦 파일 크기: ${arrayBuffer.byteLength} bytes`);
+await loadDatabase(arrayBuffer, fileName, true); // 자동 로드
+showStatus(`GitHub에서 "${fileName}" 자동 로드 완료!`, 'success');
+return; // 성공하면 종료
+} else {
+console.log(`❌ ${fileName} 로드 실패: ${response.status}`);
+}
+} catch (error) {
+console.log(`💥 GitHub ${fileName} 로드 오류:`, error);
+showStatus(`GitHub "${fileName}" 로드 중 오류: ${error.message}`, 'error');
+}
+}
+
+// GitHub 로드 실패 시 로컬 파일 시도
+console.log('🔄 GitHub 로드 실패, 로컬 파일 시도');
+showStatus('GitHub에서 데이터를 찾을 수 없습니다. 로컬 파일을 확인 중...', 'info');
+await tryLocalDatabase();
+}
+
+// 로컬 데이터베이스 로드 시도
+async function tryLocalDatabase() {
+console.log('🔄 로컬 데이터베이스 로드 시작');
+const localDbFiles = [
+'ESSA_DATA',         // 메인 ESSA 데이터베이스
+'ESSA_DATA.db',      // 확장자 포함 버전
+'data.db',
+'database.db',
+'price_data.db'
+];
+
+for (const fileName of localDbFiles) {
+try {
+console.log(`🔍 로컬 파일 시도: ${fileName}`);
+showStatus(`로컬 "${fileName}" 로드 시도 중...`, 'info');
+
+const response = await fetch(fileName);
+console.log(`📡 로컬 응답: ${response.status} ${response.statusText}`);
+
+if (response.ok) {
+console.log(`✅ 로컬 ${fileName} 로드 성공!`);
+const arrayBuffer = await response.arrayBuffer();
+console.log(`📦 로컬 파일 크기: ${arrayBuffer.byteLength} bytes`);
+await loadDatabase(arrayBuffer, fileName, true); // 자동 로드
+showStatus(`로컬 "${fileName}" 자동 로드 완료!`, 'success');
+return;
+} else {
+console.log(`❌ 로컬 ${fileName} 로드 실패: ${response.status}`);
+}
+} catch (error) {
+console.log(`💥 로컬 ${fileName} 로드 오류:`, error);
+}
+}
+
+// 모든 자동 로드 실패 시
+console.log('❌ 모든 자동 로드 실패');
+showStatus('자동 데이터베이스 로드에 실패했습니다. 수동으로 업로드해주세요.', 'info');
+displayGitHubInstructions();
+}
+
+// GitHub 설정 안내 표시
+function displayGitHubInstructions() {
+const currentConfig = CONFIG.GITHUB;
+const isConfigured = currentConfig.username !== 'YOUR_USERNAME' && currentConfig.repository !== 'YOUR_REPOSITORY';
+
+const instructionsHTML = `
+<div class="github-instructions" style="margin-top: 15px; padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid ${isConfigured ? '#28a745' : '#007bff'};">
+<h4 style="color: ${isConfigured ? '#28a745' : '#007bff'}; margin-bottom: 10px;">
+${isConfigured ? '✅ GitHub 설정 완료' : '📋 GitHub 자동 로드 설정 방법'}
+</h4>
+
+${isConfigured ? `
+<div style="background: #d4edda; padding: 10px; border-radius: 4px; margin-bottom: 15px;">
+<strong>현재 설정:</strong><br>
+• 사용자: <code>${currentConfig.username}</code><br>
+• 리포지토리: <code>${currentConfig.repository}</code><br>
+• 브랜치: <code>${currentConfig.branch}</code><br>
+• 데이터 폴더: <code>${currentConfig.dataFolder}</code><br>
+• 예상 URL: <code style="font-size: 11px;">https://raw.githubusercontent.com/${currentConfig.username}/${currentConfig.repository}/${currentConfig.branch}/${currentConfig.dataFolder}/ESSA_DATA</code>
+</div>
+<p style="color: #155724; font-weight: 600;">위 URL에 데이터베이스 파일이 있는지 확인해주세요.</p>
+` : `
+<ol style="margin: 10px 0; padding-left: 20px; line-height: 1.6; font-size: 14px;">
+<li><strong>GitHub 리포지토리 생성</strong>
+   <ul style="margin: 5px 0; padding-left: 20px;">
+   <li>GitHub.com에서 새 리포지토리 생성</li>
+   <li>Public으로 설정 (Private도 가능하지만 토큰 필요)</li>
+   </ul>
+</li>
+<li><strong>데이터 폴더 및 파일 업로드</strong>
+   <ul style="margin: 5px 0; padding-left: 20px;">
+   <li>리포지토리에 <code>data</code> 폴더 생성</li>
+   <li>SQLite 파일을 <code>data/ESSA_DATA</code>로 업로드</li>
+   </ul>
+</li>
+<li><strong>HTML 파일 설정 수정</strong>
+<pre style="background: #e9ecef; padding: 10px; border-radius: 4px; margin: 8px 0; font-size: 12px; overflow-x: auto;">
+GITHUB: {
+  username: '${currentConfig.username === 'YOUR_USERNAME' ? '실제사용자명' : currentConfig.username}',
+  repository: '${currentConfig.repository === 'YOUR_REPOSITORY' ? '실제리포지토리명' : currentConfig.repository}',
+  branch: 'main',
+  dataFolder: 'data',
+  enabled: true
+}
+</pre>
+</li>
+<li><strong>파일 저장 후 새로고침</strong></li>
+</ol>
+
+<div style="background: #fff3cd; padding: 10px; border-radius: 4px; margin: 10px 0; border-left: 4px solid #ffc107;">
+<strong>⚠️ 주의사항:</strong><br>
+• GitHub Raw URL은 캐시가 적용되므로 파일 업데이트 후 반영까지 시간이 걸릴 수 있습니다<br>
+• Private 리포지토리 사용 시 GitHub Personal Access Token이 필요합니다
+</div>
+`}
+
+<div style="margin-top: 15px; padding: 10px; background: #e7f3ff; border-radius: 4px;">
+<strong>📁 권장 폴더 구조:</strong>
+<pre style="font-size: 11px; margin: 5px 0;">
+your-repository/
+├── index.html
+├── data/
+│   ├── ESSA_DATA        ← 메인 ESSA 데이터베이스
+│   ├── data.db          ← 백업 데이터베이스
+│   ├── database.db      ← 추가 데이터베이스
+│   └── sample.db        ← 샘플 데이터
+└── README.md
+</pre>
+</div>
+</div>
+`;
+
+const dbInfo = document.getElementById('dbInfo');
+if (dbInfo) {
+dbInfo.innerHTML = instructionsHTML;
+dbInfo.style.display = 'block';
+}
+}
+
+function handleFileUpload(file) {
+if (!CONFIG.ALLOWED_EXTENSIONS.test(file.name)) {
+showStatus('SQLite 데이터베이스 파일(.db, .sqlite, .sqlite3)만 업로드 가능합니다.', 'error');
+return;
+}
+
+showStatus('파일을 읽는 중...', 'info');
+const reader = new FileReader();
+reader.onload = e => loadDatabase(e.target.result, file.name, false); // 수동 업로드
+reader.onerror = () => showStatus('파일 읽기 중 오류가 발생했습니다.', 'error');
+reader.readAsArrayBuffer(file);
+}
+
+async function loadDatabase(arrayBuffer, fileName, isAutoLoad = true) {
+try {
+showStatus('SQL.js 라이브러리를 로드 중...', 'info');
+
+if (typeof initSqlJs === 'undefined') {
+await new Promise((resolve, reject) => {
+const script = document.createElement('script');
+script.src = `${CONFIG.SQLJSCDN}/sql-wasm.js`;
+script.onload = resolve;
+script.onerror = reject;
+document.head.appendChild(script);
+});
+}
+
+const SQL = await initSqlJs({
+locateFile: file => `${CONFIG.SQLJSCDN}/${file}`
+});
+
+// 공유 DB에 저장
+state.db = new SQL.Database(new Uint8Array(arrayBuffer));
+state.fileName = fileName;
+
+// 두 탭 모두 분석
+analyzeBothTables();
+
+// 자동 로드 성공 시에만 업로드 섹션 숨김
+if (isAutoLoad) {
+hideUploadSection();
+}
+
+} catch (error) {
+showStatus('데이터베이스 로드 실패: ' + error.message, 'error');
+}
+}
+
+// 업로드 섹션 숨김 함수
+function hideUploadSection() {
+const uploadSection = document.querySelector('.common-upload-section');
+if (uploadSection) {
+// 먼저 "자동 로드됨" 메시지 표시
+const uploadArea = uploadSection.querySelector('.upload-area');
+if (uploadArea) {
+uploadArea.innerHTML = `
+<div style="color: #28a745; font-weight: 700;">
+<i style="font-size: 24px;">✅</i>
+<h3 style="color: #28a745; margin: 8px 0 4px 0;">데이터베이스 자동 로드 완료</h3>
+<p style="color: #155724;">GitHub에서 데이터를 성공적으로 불러왔습니다</p>
+</div>
+`;
+uploadArea.style.border = '2px solid #28a745';
+uploadArea.style.backgroundColor = 'rgba(40, 167, 69, 0.1)';
+uploadArea.style.cursor = 'default';
+}
+
+// 3초 후 숨김 처리
+setTimeout(() => {
+uploadSection.style.transition = 'all 0.5s ease';
+uploadSection.style.opacity = '0';
+uploadSection.style.transform = 'translateY(-20px)';
+uploadSection.style.maxHeight = '0';
+uploadSection.style.padding = '0 20px';
+uploadSection.style.marginBottom = '0';
+uploadSection.style.overflow = 'hidden';
+
+// 완전히 숨기기
+setTimeout(() => {
+uploadSection.style.display = 'none';
+}, 500);
+}, 3000);
+
+console.log('📦 업로드 섹션 숨김 처리 완료');
+}
+}
+
+// 업로드 섹션 다시 보이기 함수 (필요시 사용)
+function showUploadSection() {
+const uploadSection = document.querySelector('.common-upload-section');
+if (uploadSection) {
+uploadSection.style.display = 'block';
+uploadSection.style.opacity = '0';
+uploadSection.style.transform = 'translateY(-20px)';
+uploadSection.style.maxHeight = 'none';
+uploadSection.style.padding = '20px';
+uploadSection.style.marginBottom = '25px';
+uploadSection.style.overflow = 'visible';
+
+// 애니메이션으로 나타내기
+setTimeout(() => {
+uploadSection.style.opacity = '1';
+uploadSection.style.transform = 'translateY(0)';
+}, 50);
+
+console.log('📦 업로드 섹션 표시 처리 완료');
+}
+}
+
+function analyzeBothTables() {
+try {
+let essaSuccess = false;
+let aceSuccess = false;
+
+// ESSA 테이블 분석
+const essaTable = CONFIG.TABLE_CONFIG.essa;
+const essaCheck = state.db.exec(`SELECT name FROM sqlite_master WHERE type='table' AND name='${essaTable}'`);
+if (essaCheck.length && essaCheck[0].values.length) {
+const essaColumns = state.db.exec(`PRAGMA table_info(${essaTable})`);
+state.essa.tableInfo = {
+name: essaTable,
+columns: essaColumns[0].values.map(col => col[1])
+};
+const essaRowCount = state.db.exec(`SELECT COUNT(*) FROM ${essaTable}`);
+const essaCount = essaRowCount[0].values[0][0];
+populateAllEssaOptions();
+document.getElementById('searchForm-essa').style.display = 'grid';
+essaSuccess = true;
+console.log(`ESSA 테이블 로드 완료: ${essaCount}개 레코드`);
+}
+
+// ACE 테이블 분석
+const aceTable = CONFIG.TABLE_CONFIG.ace;
+const aceCheck = state.db.exec(`SELECT name FROM sqlite_master WHERE type='table' AND name='${aceTable}'`);
+if (aceCheck.length && aceCheck[0].values.length) {
+const aceColumns = state.db.exec(`PRAGMA table_info(${aceTable})`);
+state.ace.tableInfo = {
+name: aceTable,
+columns: aceColumns[0].values.map(col => col[1])
+};
+const aceRowCount = state.db.exec(`SELECT COUNT(*) FROM ${aceTable}`);
+const aceCount = aceRowCount[0].values[0][0];
+populateAllOptions('ace');
+document.getElementById('searchForm-ace').style.display = 'grid';
+aceSuccess = true;
+console.log(`ACE 테이블 로드 완료: ${aceCount}개 레코드`);
+}
+
+// 결과 메시지
+if (essaSuccess && aceSuccess) {
+showStatus(`"${state.fileName}" 로드 완료! ESSA와 ACE 탭 모두 사용 가능합니다.`, 'success');
+displayDatabaseInfo();
+} else if (essaSuccess) {
+showStatus(`"${state.fileName}" 로드 완료! ESSA 탭만 사용 가능합니다.`, 'success');
+displayDatabaseInfo();
+} else if (aceSuccess) {
+showStatus(`"${state.fileName}" 로드 완료! ACE 탭만 사용 가능합니다.`, 'success');
+displayDatabaseInfo();
+} else {
+showStatus('데이터베이스에 DATA 또는 DATA_1 테이블이 없습니다.', 'error');
+}
+
+} catch (error) {
+showStatus('데이터베이스 분석 오류: ' + error.message, 'error');
+}
+}
+
+function displayDatabaseInfo() {
+let infoHTML = '<h4>데이터베이스 정보</h4>';
+infoHTML += `<p>파일명: ${state.fileName}</p>`;
+if (state.essa.tableInfo) {
+const essaCount = state.db.exec(`SELECT COUNT(*) FROM ${state.essa.tableInfo.name}`);
+infoHTML += `<p>ESSA 테이블: ${state.essa.tableInfo.name} (${essaCount[0].values[0][0]}개 레코드)</p>`;
+}
+if (state.ace.tableInfo) {
+const aceCount = state.db.exec(`SELECT COUNT(*) FROM ${state.ace.tableInfo.name}`);
+infoHTML += `<p>ACE 테이블: ${state.ace.tableInfo.name} (${aceCount[0].values[0][0]}개 레코드)</p>`;
+}
+document.getElementById('dbInfo').innerHTML = infoHTML;
+document.getElementById('dbInfo').style.display = 'block';
+}
+
+function showStatus(message, type) {
+document.getElementById('statusMessage').innerHTML = 
+`<div class="status-message ${type}">${message}</div>`;
+}
+
+// 검색 함수
+function searchProducts(tabName) {
+if (!state.db || !state[tabName].tableInfo) {
+showStatus('먼저 데이터베이스 파일을 업로드해주세요.', 'error');
+return;
+}
+
+document.getElementById(`loading-${tabName}`).style.display = 'block';
+document.getElementById(`results-container-${tabName}`).innerHTML = '';
+
+setTimeout(() => {
+try {
+const searchParams = {};
+const fieldMapping = CONFIG.FIELD_MAPPING[tabName];
+Object.keys(fieldMapping).forEach(key => {
+const element = document.getElementById(`${tabName}_${key}`);
+if (element) {
+const value = (element.value || '').trim();
+if (value) searchParams[key] = value;
+}
+});
+
+const products = performSearch(searchParams, tabName);
+state[tabName].currentProducts = products;
+state[tabName].currentSort = 'none';
+displayResults(products, tabName);
+} catch (error) {
+document.getElementById(`results-container-${tabName}`).innerHTML = 
+`<div class="no-results">검색 중 오류: ${error.message}</div>`;
+} finally {
+document.getElementById(`loading-${tabName}`).style.display = 'none';
+}
+}, 100);
+}
+
+function performSearch(searchParams, tabName) {
+let query = `SELECT * FROM ${state[tabName].tableInfo.name} WHERE 1=1`;
+const params = [];
+
+if (tabName === 'essa') {
+Object.entries(searchParams).forEach(([key, value]) => {
+const matchedCol = findMatchingColumn(key, tabName);
+if (matchedCol) {
+const actualCol = getActualColumnName(matchedCol, tabName);
+const safeCol = getSafeColumnName(actualCol);
+query += ` AND ${safeCol} = ?`;
+params.push(value);
+}
+});
+} else if (tabName === 'ace') {
+const frameValue = searchParams.frame;
+const typeValue = searchParams.type;
+const mattressValue = searchParams.mattress;
+const foundationValue = searchParams.foundation;
+const relatedItemsValue = searchParams.related_items;
+const categoryValue = searchParams.category;
+const sizeValue = searchParams.size;
+const nightstandValue = searchParams.nightstand;
+const sideboardValue = searchParams.sideboard;
+const furnitureValue = searchParams.furniture;
+
+let complexCondition = '';
+let complexParams = [];
+
+let group1Conditions = [];
+let group1Params = [];
+
+if (frameValue && typeValue) {
+const frameCol = findMatchingColumn('frame', tabName);
+const typeCol = findMatchingColumn('type', tabName);
+if (frameCol && typeCol) {
+const actualFrameCol = getActualColumnName(frameCol, tabName);
+const actualTypeCol = getActualColumnName(typeCol, tabName);
+const safeFrameCol = getSafeColumnName(actualFrameCol);
+const safeTypeCol = getSafeColumnName(actualTypeCol);
+group1Conditions.push(`(${safeFrameCol} = ? AND ${safeTypeCol} = ?)`);
+group1Params.push(frameValue, typeValue);
+}
+} else if (frameValue) {
+const frameCol = findMatchingColumn('frame', tabName);
+if (frameCol) {
+const actualFrameCol = getActualColumnName(frameCol, tabName);
+const safeFrameCol = getSafeColumnName(actualFrameCol);
+group1Conditions.push(`(${safeFrameCol} = ?)`);
+group1Params.push(frameValue);
+}
+}
+
+if (mattressValue) {
+const mattressCol = findMatchingColumn('mattress', tabName);
+if (mattressCol) {
+const actualMattressCol = getActualColumnName(mattressCol, tabName);
+const safeMattressCol = getSafeColumnName(actualMattressCol);
+group1Conditions.push(`(${safeMattressCol} = ?)`);
+group1Params.push(mattressValue);
+}
+}
+
+if (foundationValue) {
+const foundationCol = findMatchingColumn('foundation', tabName);
+if (foundationCol) {
+const actualFoundationCol = getActualColumnName(foundationCol, tabName);
+const safeFoundationCol = getSafeColumnName(actualFoundationCol);
+group1Conditions.push(`(${safeFoundationCol} = ?)`);
+group1Params.push(foundationValue);
+}
+}
+
+if (relatedItemsValue) {
+const relatedItemsCol = findMatchingColumn('related_items', tabName);
+if (relatedItemsCol) {
+const actualRelatedItemsCol = getActualColumnName(relatedItemsCol, tabName);
+const safeRelatedItemsCol = getSafeColumnName(actualRelatedItemsCol);
+group1Conditions.push(`(${safeRelatedItemsCol} = ?)`);
+group1Params.push(relatedItemsValue);
+}
+}
+
+if (categoryValue) {
+const categoryCol = findMatchingColumn('category', tabName);
+if (categoryCol) {
+const actualCategoryCol = getActualColumnName(categoryCol, tabName);
+const safeCategoryCol = getSafeColumnName(actualCategoryCol);
+group1Conditions.push(`(${safeCategoryCol} = ?)`);
+group1Params.push(categoryValue);
+}
+}
+
+if (group1Conditions.length > 0) {
+let group1Query = '';
+if (group1Conditions.length === 1) {
+group1Query = group1Conditions[0];
+} else {
+group1Query = `(${group1Conditions.join(' OR ')})`;
+}
+
+if (sizeValue) {
+const sizeCol = findMatchingColumn('size', tabName);
+if (sizeCol) {
+const actualSizeCol = getActualColumnName(sizeCol, tabName);
+const safeSizeCol = getSafeColumnName(actualSizeCol);
+group1Query = `(${group1Query} AND ${safeSizeCol} = ?)`;
+group1Params.push(sizeValue);
+}
+}
+
+complexCondition = group1Query;
+complexParams = group1Params;
+}
+
+let group2Conditions = [];
+let group2Params = [];
+
+if (nightstandValue) {
+const nightstandCol = findMatchingColumn('nightstand', tabName);
+if (nightstandCol) {
+const actualNightstandCol = getActualColumnName(nightstandCol, tabName);
+const safeNightstandCol = getSafeColumnName(actualNightstandCol);
+group2Conditions.push(`(${safeNightstandCol} = ?)`);
+group2Params.push(nightstandValue);
+}
+}
+
+if (sideboardValue) {
+const sideboardCol = findMatchingColumn('sideboard', tabName);
+if (sideboardCol) {
+const actualSideboardCol = getActualColumnName(sideboardCol, tabName);
+const safeSideboardCol = getSafeColumnName(actualSideboardCol);
+group2Conditions.push(`(${safeSideboardCol} = ?)`);
+group2Params.push(sideboardValue);
+}
+}
+
+if (furnitureValue) {
+const furnitureCol = findMatchingColumn('furniture', tabName);
+if (furnitureCol) {
+const actualFurnitureCol = getActualColumnName(furnitureCol, tabName);
+const safeFurnitureCol = getSafeColumnName(actualFurnitureCol);
+group2Conditions.push(`(${safeFurnitureCol} = ?)`);
+group2Params.push(furnitureValue);
+}
+}
+
+if (group2Conditions.length > 0) {
+let group2Query = '';
+if (group2Conditions.length === 1) {
+group2Query = group2Conditions[0];
+} else {
+group2Query = `(${group2Conditions.join(' OR ')})`;
+}
+
+if (complexCondition) {
+complexCondition = `(${complexCondition} OR ${group2Query})`;
+complexParams = [...complexParams, ...group2Params];
+} else {
+complexCondition = group2Query;
+complexParams = group2Params;
+}
+}
+
+if (complexCondition) {
+query += ` AND ${complexCondition}`;
+params.push(...complexParams);
+}
+}
+
+try {
+const stmt = state.db.prepare(query);
+stmt.bind(params);
+const products = [];
+let totalAmount = 0;
+
+while (stmt.step()) {
+const product = stmt.getAsObject();
+products.push(product);
+
+// 모든 탭에서 총합계 계산
+const price = getPriceValue(product);
+const quantity = 1; // 기본 수량
+totalAmount += price * quantity;
+}
+stmt.free();
+
+// 탭별 총합계 저장
+state[tabName].totalAmount = totalAmount;
+if (tabName === 'ace') {
+state.ace.individualDiscountedTotal = totalAmount;
+}
+
+return products;
+} catch (error) {
+console.error('Search query error:', error, query, params);
+return [];
+}
+}
+
+// 유틸리티 함수들
+function findMatchingColumn(fieldKey, tabName) {
+const fieldMapping = CONFIG.FIELD_MAPPING[tabName];
+if (!fieldMapping[fieldKey]) {
+return null;
+}
+
+const possibleNames = fieldMapping[fieldKey];
+let matched = possibleNames.find(name => 
+state[tabName].tableInfo.columns.some(col => col.toUpperCase() === name.toUpperCase())
+);
+
+if (!matched && fieldKey === 'size') {
+matched = state[tabName].tableInfo.columns.find(col => 
+col.toUpperCase().includes('SIZE') || col.includes('사이즈')
+);
+}
+
+return matched;
+}
+
+function getActualColumnName(matchedCol, tabName) {
+const actual = state[tabName].tableInfo.columns.find(col => 
+col.toUpperCase() === matchedCol.toUpperCase()
+);
+
+if (!actual) {
+return state[tabName].tableInfo.columns.find(col => 
+col.includes(matchedCol) || matchedCol.includes(col)
+) || matchedCol;
+}
+
+return actual;
+}
+
+function getSafeColumnName(colName) {
+return /[ -]/.test(colName) ? `[${colName}]` : colName;
+}
+
+function getPriceValue(product) {
+const priceKeys = ['금액', '판매가', 'PRICE', 'SALE_PRICE', '가격', 'PRICE_AMOUNT', 'AMOUNT'];
+for (const key of priceKeys) {
+const foundKey = Object.keys(product).find(k => k.toUpperCase() === key.toUpperCase());
+if (foundKey) {
+const value = product[foundKey];
+if (value === undefined || value === null || value === '') {
+continue;
+}
+
+let num;
+if (typeof value === 'string') {
+const cleanValue = value.replace(/[₩,원\\s]/g, '');
+num = parseInt(cleanValue);
+} else if (typeof value === 'number') {
+num = value;
+} else {
+continue;
+}
+
+if (!isNaN(num) && num !== 0) {
+return num;
+}
+}
+}
+return 0;
+}
+
+function formatPrice(price) {
+if (!price) return "0";
+const num = typeof price === 'string' ? parseInt(price.replace(/,/g, '')) : price;
+return isNaN(num) ? "0" : num.toLocaleString('ko-KR');
+}
+
+function findColumnValue(product, possibleKeys) {
+for (const key of possibleKeys) {
+const foundKey = Object.keys(product).find(k => k.toUpperCase() === key.toUpperCase());
+if (foundKey && product[foundKey] !== undefined && product[foundKey] !== null) {
+return product[foundKey];
+}
+}
+return '-';
+}
+
+function normalizeSizeValue(size) {
+if (!size) return null;
+let normalized = size.toString().trim();
+
+if (normalized.match(/^\d+\s*(인|人|IN)$/i)) {
+const num = normalized.match(/^\d+/)[0];
+return `${num}인`;
+}
+
+if (normalized.match(/^[A-Z]{1,3}$/i)) {
+return normalized.toUpperCase();
+}
+
+return normalized;
+}
+
+function compareSizeValues(a, b) {
+const numA = a.match(/\d+/)?.[0] || 0;
+const numB = b.match(/\d+/)?.[0] || 0;
+
+if (numA !== numB) {
+return parseInt(numA) - parseInt(numB);
+}
+
+return a.localeCompare(b);
+}
+
+// ESSA 옵션 채우기 함수들
+function populateAllEssaOptions() {
+const fieldMapping = CONFIG.FIELD_MAPPING.essa;
+Object.keys(fieldMapping).forEach(fieldKey => {
+const matchedCol = findMatchingColumn(fieldKey, 'essa');
+if (matchedCol) {
+const actualCol = getActualColumnName(matchedCol, 'essa');
+const safeCol = getSafeColumnName(actualCol);
+
+try {
+const query = `SELECT DISTINCT ${safeCol} FROM ${state.essa.tableInfo.name} 
+WHERE ${safeCol} IS NOT NULL AND TRIM(${safeCol}) != '' 
+ORDER BY ${safeCol}`;
+const result = state.db.exec(query);
+
+const selectElement = document.getElementById(`essa_${fieldKey}`);
+selectElement.innerHTML = '<option value="">전체</option>';
+
+if (result.length > 0 && result[0].values.length > 0) {
+const uniqueValues = [];
+result[0].values.forEach(row => {
+const value = row[0];
+if (value && value.toString().trim() !== '') {
+if (fieldKey === 'size') {
+const normalized = normalizeSizeValue(value.toString().trim());
+if (normalized) {
+uniqueValues.push(normalized);
+}
+} else {
+uniqueValues.push(value.toString().trim());
+}
+}
+});
+
+const sortedUniqueValues = [...new Set(uniqueValues)].sort((a, b) => {
+if (fieldKey === 'size') {
+return compareSizeValues(a, b);
+}
+return a.localeCompare(b);
+});
+
+sortedUniqueValues.forEach(value => {
+const option = document.createElement('option');
+option.value = value;
+option.textContent = value;
+selectElement.appendChild(option);
+});
+}
+} catch (error) {
+console.error(`Error populating essa ${fieldKey}:`, error);
+}
+}
+});
+}
+
+function updateEssaDependentOptions(changedField) {
+if (!state.db || !state.essa.tableInfo) return;
+
+const pNameValue = document.getElementById('essa_p_name').value;
+const sizeValue = document.getElementById('essa_size').value;
+const materialValue = document.getElementById('essa_material').value;
+
+if (pNameValue) {
+updateEssaOptionsByProductName(pNameValue, sizeValue, materialValue, changedField);
+} else if (sizeValue) {
+updateEssaOptionsBySize(sizeValue, materialValue, changedField);
+} else if (materialValue) {
+updateEssaOptionsByMaterial(materialValue, changedField);
+} else {
+resetEssaDependentOptions();
+}
+}
+
+function updateEssaOptionsByProductName(productName, currentSize, currentMaterial, changedField) {
+const pNameCol = findMatchingColumn('p_name', 'essa');
+if (!pNameCol) return;
+
+const actualPNameCol = getActualColumnName(pNameCol, 'essa');
+const safePNameCol = getSafeColumnName(actualPNameCol);
+
+const dependentFields = ['size', 'size_option', 'material', 'fabric', 'function', 'stool', 'style', 'leather_option', 'event_product'];
+
+dependentFields.forEach(fieldKey => {
+if (changedField === fieldKey && (fieldKey === 'size' || fieldKey === 'material')) {
+return;
+}
+
+const fieldCol = findMatchingColumn(fieldKey, 'essa');
+if (!fieldCol) return;
+
+const actualFieldCol = getActualColumnName(fieldCol, 'essa');
+const safeFieldCol = getSafeColumnName(actualFieldCol);
+
+try {
+let whereClause = `${safePNameCol} = ?`;
+const params = [productName];
+
+if (fieldKey !== 'size' && currentSize) {
+const sizeCol = findMatchingColumn('size', 'essa');
+if (sizeCol) {
+const actualSizeCol = getActualColumnName(sizeCol, 'essa');
+const safeSizeCol = getSafeColumnName(actualSizeCol);
+whereClause += ` AND ${safeSizeCol} = ?`;
+params.push(currentSize);
+}
+}
+
+if (fieldKey === 'fabric' && currentMaterial) {
+const materialCol = findMatchingColumn('material', 'essa');
+if (materialCol) {
+const actualMaterialCol = getActualColumnName(materialCol, 'essa');
+const safeMaterialCol = getSafeColumnName(actualMaterialCol);
+whereClause += ` AND ${safeMaterialCol} = ?`;
+params.push(currentMaterial);
+}
+}
+
+const query = `SELECT DISTINCT ${safeFieldCol} FROM ${state.essa.tableInfo.name} 
+WHERE ${whereClause} AND ${safeFieldCol} IS NOT NULL AND TRIM(${safeFieldCol}) != '' 
+ORDER BY ${safeFieldCol}`;
+const result = state.db.exec(query, params);
+
+const selectElement = document.getElementById(`essa_${fieldKey}`);
+const currentValue = selectElement.value;
+
+if (changedField !== fieldKey) {
+selectElement.innerHTML = '<option value="">전체</option>';
+} else {
+selectElement.innerHTML = '<option value="">전체</option>';
+}
+
+if (result.length > 0 && result[0].values.length > 0) {
+const uniqueValues = [];
+result[0].values.forEach(row => {
+const value = row[0];
+if (value && value.toString().trim() !== '') {
+if (fieldKey === 'size') {
+const normalized = normalizeSizeValue(value.toString().trim());
+if (normalized) {
+uniqueValues.push(normalized);
+}
+} else {
+uniqueValues.push(value.toString().trim());
+}
+}
+});
+
+const sortedUniqueValues = [...new Set(uniqueValues)].sort((a, b) => {
+if (fieldKey === 'size') {
+return compareSizeValues(a, b);
+}
+return a.localeCompare(b);
+});
+
+sortedUniqueValues.forEach(value => {
+const option = document.createElement('option');
+option.value = value;
+option.textContent = value;
+if (changedField !== fieldKey && value === currentValue) {
+option.selected = true;
+}
+selectElement.appendChild(option);
+});
+}
+} catch (error) {
+console.error(`Error updating ${fieldKey}:`, error);
+}
+});
+}
+
+function updateEssaOptionsBySize(sizeValue, currentMaterial, changedField) {
+const sizeCol = findMatchingColumn('size', 'essa');
+if (!sizeCol) return;
+
+const actualSizeCol = getActualColumnName(sizeCol, 'essa');
+const safeSizeCol = getSafeColumnName(actualSizeCol);
+
+const dependentFields = ['p_name', 'size_option', 'material', 'fabric', 'function', 'stool', 'style', 'leather_option', 'event_product'];
+
+dependentFields.forEach(fieldKey => {
+if (changedField === fieldKey) return;
+
+const fieldCol = findMatchingColumn(fieldKey, 'essa');
+if (!fieldCol) return;
+
+const actualFieldCol = getActualColumnName(fieldCol, 'essa');
+const safeFieldCol = getSafeColumnName(actualFieldCol);
+
+try {
+let whereClause = `${safeSizeCol} = ?`;
+const params = [sizeValue];
+
+if (fieldKey === 'fabric' && currentMaterial) {
+const materialCol = findMatchingColumn('material', 'essa');
+if (materialCol) {
+const actualMaterialCol = getActualColumnName(materialCol, 'essa');
+const safeMaterialCol = getSafeColumnName(actualMaterialCol);
+whereClause += ` AND ${safeMaterialCol} = ?`;
+params.push(currentMaterial);
+}
+}
+
+const query = `SELECT DISTINCT ${safeFieldCol} FROM ${state.essa.tableInfo.name} 
+WHERE ${whereClause} AND ${safeFieldCol} IS NOT NULL AND TRIM(${safeFieldCol}) != '' 
+ORDER BY ${safeFieldCol}`;
+const result = state.db.exec(query, params);
+
+const selectElement = document.getElementById(`essa_${fieldKey}`);
+const currentValue = selectElement.value;
+selectElement.innerHTML = '<option value="">전체</option>';
+
+if (result.length > 0 && result[0].values.length > 0) {
+const uniqueValues = [];
+result[0].values.forEach(row => {
+const value = row[0];
+if (value && value.toString().trim() !== '') {
+uniqueValues.push(value.toString().trim());
+}
+});
+
+const sortedUniqueValues = [...new Set(uniqueValues)].sort();
+
+sortedUniqueValues.forEach(value => {
+const option = document.createElement('option');
+option.value = value;
+option.textContent = value;
+if (value === currentValue) {
+option.selected = true;
+}
+selectElement.appendChild(option);
+});
+}
+} catch (error) {
+console.error(`Error updating ${fieldKey}:`, error);
+}
+});
+}
+
+function updateEssaOptionsByMaterial(materialValue, changedField) {
+const materialCol = findMatchingColumn('material', 'essa');
+if (!materialCol) return;
+
+const actualMaterialCol = getActualColumnName(materialCol, 'essa');
+const safeMaterialCol = getSafeColumnName(actualMaterialCol);
+
+if (changedField !== 'fabric') {
+const fabricCol = findMatchingColumn('fabric', 'essa');
+if (fabricCol) {
+const actualFabricCol = getActualColumnName(fabricCol, 'essa');
+const safeFabricCol = getSafeColumnName(actualFabricCol);
+
+try {
+const query = `SELECT DISTINCT ${safeFabricCol} FROM ${state.essa.tableInfo.name} 
+WHERE ${safeMaterialCol} = ? AND ${safeFabricCol} IS NOT NULL AND TRIM(${safeFabricCol}) != '' 
+ORDER BY ${safeFabricCol}`;
+const result = state.db.exec(query, [materialValue]);
+
+const selectElement = document.getElementById('essa_fabric');
+const currentValue = selectElement.value;
+selectElement.innerHTML = '<option value="">전체</option>';
+
+if (result.length > 0 && result[0].values.length > 0) {
+const uniqueValues = [];
+result[0].values.forEach(row => {
+const value = row[0];
+if (value && value.toString().trim() !== '') {
+uniqueValues.push(value.toString().trim());
+}
+});
+
+const sortedUniqueValues = [...new Set(uniqueValues)].sort();
+
+sortedUniqueValues.forEach(value => {
+const option = document.createElement('option');
+option.value = value;
+option.textContent = value;
+if (value === currentValue) {
+option.selected = true;
+}
+selectElement.appendChild(option);
+});
+}
+} catch (error) {
+console.error('Error updating fabric:', error);
+}
+}
+}
+}
+
+function resetEssaDependentOptions() {
+const fields = ['p_name', 'size', 'size_option', 'material', 'fabric', 'function', 'stool', 'style', 'leather_option', 'event_product'];
+fields.forEach(fieldKey => {
+const selectElement = document.getElementById(`essa_${fieldKey}`);
+selectElement.innerHTML = '<option value="">전체</option>';
+});
+
+if (state.db && state.essa.tableInfo) {
+populateAllEssaOptions();
+}
+}
+
+// ACE 옵션 채우기 함수들
+function populateAllOptions(tabName) {
+const fieldMapping = CONFIG.FIELD_MAPPING[tabName];
+Object.keys(fieldMapping).forEach(fieldKey => {
+if (fieldKey !== 'type' && fieldKey !== 'size') {
+const matchedCol = findMatchingColumn(fieldKey, tabName);
+if (matchedCol) {
+const actualCol = getActualColumnName(matchedCol, tabName);
+const safeCol = getSafeColumnName(actualCol);
+
+try {
+const query = `SELECT DISTINCT ${safeCol} FROM ${state[tabName].tableInfo.name} 
+WHERE ${safeCol} IS NOT NULL AND ${safeCol} != '' 
+ORDER BY ${safeCol}`;
+const result = state.db.exec(query);
+
+// 모든 필드를 select로 처리 (브라우저 호환성 향상)
+const selectElement = document.getElementById(`${tabName}_${fieldKey}`);
+const currentValue = selectElement.value;
+selectElement.innerHTML = '<option value="">전체</option>';
+
+if (result.length > 0 && result[0].values.length > 0) {
+const uniqueValues = [];
+result[0].values.forEach(row => {
+const value = row[0];
+if (value && value.toString().trim() !== '') {
+uniqueValues.push(value.toString().trim());
+}
+});
+
+const sortedUniqueValues = [...new Set(uniqueValues)].sort();
+
+sortedUniqueValues.forEach(value => {
+const option = document.createElement('option');
+option.value = value;
+option.textContent = value;
+if (value === currentValue) {
+option.selected = true;
+}
+selectElement.appendChild(option);
+});
+}
+} catch (error) {
+console.error(`Error populating ${fieldKey}:`, error);
+}
+}
+}
+});
+
+populateSizeOptions(tabName);
+}
+
+function populateSizeOptions(tabName) {
+const sizeSelect = document.getElementById(`${tabName}_size`);
+sizeSelect.innerHTML = '<option value="">전체</option>';
+
+if (!state.db || !state[tabName].tableInfo) return;
+
+const matchedCol = findMatchingColumn('size', tabName);
+if (matchedCol) {
+const actualCol = getActualColumnName(matchedCol, tabName);
+const safeCol = getSafeColumnName(actualCol);
+
+try {
+const query = `SELECT DISTINCT ${safeCol} FROM ${state[tabName].tableInfo.name} 
+WHERE ${safeCol} IS NOT NULL AND TRIM(${safeCol}) != '' 
+ORDER BY ${safeCol}`;
+const result = state.db.exec(query);
+
+if (result.length > 0 && result[0].values.length > 0) {
+const uniqueValues = [];
+result[0].values.forEach(row => {
+const value = row[0];
+if (value && value.toString().trim() !== '') {
+const normalized = normalizeSizeValue(value.toString().trim());
+if (normalized) {
+uniqueValues.push(normalized);
+}
+}
+});
+
+const sortedUniqueValues = [...new Set(uniqueValues)].sort(compareSizeValues);
+
+sortedUniqueValues.forEach(value => {
+const option = document.createElement('option');
+option.value = value;
+option.textContent = value;
+sizeSelect.appendChild(option);
+});
+}
+} catch (error) {
+console.error(`Error populating size for ${tabName}:`, error);
+}
+}
+}
+
+function updateDependentOptions(tabName) {
+if (!state.db || !state[tabName].tableInfo) return;
+
+const frameElement = document.getElementById(`${tabName}_frame`);
+const mattressElement = document.getElementById(`${tabName}_mattress`);
+
+// 안전한 값 가져오기 (브라우저 호환성 향상)
+const frameValue = frameElement ? (frameElement.value || '').trim() : '';
+const mattressValue = mattressElement ? (mattressElement.value || '').trim() : '';
+
+if (frameValue) {
+updateTypeOptions(tabName, frameValue);
+updateSizeOptionsByFrame(tabName, frameValue);
+} else if (mattressValue) {
+updateSizeOptionsByMattress(tabName, mattressValue);
+} else {
+resetDependentOptions(tabName);
+}
+}
+
+function updateTypeOptions(tabName, frameValue) {
+const frameCol = findMatchingColumn('frame', tabName);
+const typeCol = findMatchingColumn('type', tabName);
+if (!frameCol || !typeCol) return;
+
+const actualFrameCol = getActualColumnName(frameCol, tabName);
+const actualTypeCol = getActualColumnName(typeCol, tabName);
+const safeFrameCol = getSafeColumnName(actualFrameCol);
+const safeTypeCol = getSafeColumnName(actualTypeCol);
+
+try {
+const query = `SELECT DISTINCT ${safeTypeCol} FROM ${state[tabName].tableInfo.name} 
+WHERE ${safeFrameCol} = ? AND ${safeTypeCol} IS NOT NULL AND ${safeTypeCol} != '' 
+ORDER BY ${safeTypeCol}`;
+const result = state.db.exec(query, [frameValue]);
+
+const selectElement = document.getElementById(`${tabName}_type`);
+const currentValue = selectElement.value;
+selectElement.innerHTML = '<option value="">전체</option>';
+
+if (result.length > 0 && result[0].values.length > 0) {
+const uniqueValues = [];
+result[0].values.forEach(row => {
+const value = row[0];
+if (value && value.toString().trim() !== '') {
+uniqueValues.push(value.toString().trim());
+}
+});
+
+const sortedUniqueValues = [...new Set(uniqueValues)].sort();
+
+sortedUniqueValues.forEach(value => {
+const option = document.createElement('option');
+option.value = value;
+option.textContent = value;
+if (value === currentValue) {
+option.selected = true;
+}
+selectElement.appendChild(option);
+});
+
+const fieldNote = selectElement.parentNode.querySelector('.field-note');
+if (fieldNote) {
+fieldNote.textContent = `프레임 선택시 해당 타입 표시 (${sortedUniqueValues.length}개)`;
+}
+} else {
+const fieldNote = selectElement.parentNode.querySelector('.field-note');
+if (fieldNote) {
+fieldNote.textContent = '해당 프레임에 맞는 타입이 없습니다';
+}
+}
+} catch (error) {
+console.error('Error updating type options:', error);
+}
+}
+
+function updateSizeOptionsByFrame(tabName, frameValue) {
+const frameCol = findMatchingColumn('frame', tabName);
+const sizeCol = findMatchingColumn('size', tabName);
+if (!frameCol || !sizeCol) return;
+
+const actualFrameCol = getActualColumnName(frameCol, tabName);
+const actualSizeCol = getActualColumnName(sizeCol, tabName);
+const safeFrameCol = getSafeColumnName(actualFrameCol);
+const safeSizeCol = getSafeColumnName(actualSizeCol);
+
+try {
+const query = `SELECT DISTINCT ${safeSizeCol} FROM ${state[tabName].tableInfo.name} 
+WHERE ${safeFrameCol} = ? AND ${safeSizeCol} IS NOT NULL AND ${safeSizeCol} != '' 
+ORDER BY ${safeSizeCol}`;
+const result = state.db.exec(query, [frameValue]);
+
+const selectElement = document.getElementById(`${tabName}_size`);
+const currentValue = selectElement.value;
+selectElement.innerHTML = '<option value="">전체</option>';
+
+if (result.length > 0 && result[0].values.length > 0) {
+const uniqueValues = [];
+result[0].values.forEach(row => {
+const value = row[0];
+if (value && value.toString().trim() !== '') {
+uniqueValues.push(value.toString().trim());
+}
+});
+
+const sortedUniqueValues = [...new Set(uniqueValues)].sort();
+
+sortedUniqueValues.forEach(value => {
+const option = document.createElement('option');
+option.value = value;
+option.textContent = value;
+if (value === currentValue) {
+option.selected = true;
+}
+selectElement.appendChild(option);
+});
+
+const fieldNote = selectElement.parentNode.querySelector('.field-note');
+if (fieldNote) {
+fieldNote.textContent = `프레임 선택시 해당 사이즈 표시 (${sortedUniqueValues.length}개)`;
+}
+} else {
+const fieldNote = selectElement.parentNode.querySelector('.field-note');
+if (fieldNote) {
+fieldNote.textContent = '해당 프레임에 맞는 사이즈가 없습니다';
+}
+}
+} catch (error) {
+console.error('Error updating size options by frame:', error);
+}
+}
+
+function updateSizeOptionsByMattress(tabName, mattressValue) {
+const mattressCol = findMatchingColumn('mattress', tabName);
+const sizeCol = findMatchingColumn('size', tabName);
+if (!mattressCol || !sizeCol) return;
+
+const actualMattressCol = getActualColumnName(mattressCol, tabName);
+const actualSizeCol = getActualColumnName(sizeCol, tabName);
+const safeMattressCol = getSafeColumnName(actualMattressCol);
+const safeSizeCol = getSafeColumnName(actualSizeCol);
+
+try {
+const query = `SELECT DISTINCT ${safeSizeCol} FROM ${state[tabName].tableInfo.name} 
+WHERE ${safeMattressCol} = ? AND ${safeSizeCol} IS NOT NULL AND ${safeSizeCol} != '' 
+ORDER BY ${safeSizeCol}`;
+const result = state.db.exec(query, [mattressValue]);
+
+const selectElement = document.getElementById(`${tabName}_size`);
+const currentValue = selectElement.value;
+selectElement.innerHTML = '<option value="">전체</option>';
+
+if (result.length > 0 && result[0].values.length > 0) {
+const uniqueValues = [];
+result[0].values.forEach(row => {
+const value = row[0];
+if (value && value.toString().trim() !== '') {
+uniqueValues.push(value.toString().trim());
+}
+});
+
+const sortedUniqueValues = [...new Set(uniqueValues)].sort();
+
+sortedUniqueValues.forEach(value => {
+const option = document.createElement('option');
+option.value = value;
+option.textContent = value;
+if (value === currentValue) {
+option.selected = true;
+}
+selectElement.appendChild(option);
+});
+
+const fieldNote = selectElement.parentNode.querySelector('.field-note');
+if (fieldNote) {
+fieldNote.textContent = `매트리스 선택시 해당 사이즈 표시 (${sortedUniqueValues.length}개)`;
+}
+} else {
+const fieldNote = selectElement.parentNode.querySelector('.field-note');
+if (fieldNote) {
+fieldNote.textContent = '해당 매트리스에 맞는 사이즈가 없습니다';
+}
+}
+} catch (error) {
+console.error('Error updating size options by mattress:', error);
+}
+}
+
+function resetDependentOptions(tabName) {
+const typeSelect = document.getElementById(`${tabName}_type`);
+typeSelect.innerHTML = '<option value="">전체</option>';
+const typeFieldNote = typeSelect.parentNode.querySelector('.field-note');
+if (typeFieldNote) {
+typeFieldNote.textContent = '프레임 선택 시 연동됨';
+}
+
+const sizeSelect = document.getElementById(`${tabName}_size`);
+sizeSelect.innerHTML = '<option value="">전체</option>';
+const sizeFieldNote = sizeSelect.parentNode.querySelector('.field-note');
+if (sizeFieldNote) {
+sizeFieldNote.textContent = '프레임/매트리스 선택 시 연동됨';
+}
+
+populateAllOptions(tabName);
+}
+
+// 결과 표시 함수
+function displayResults(products, tabName) {
+if (products.length === 0) {
+document.getElementById(`results-container-${tabName}`).innerHTML = 
+'<div class="no-results">검색 결과가 없습니다.</div>';
+return;
+}
+
+let sortHTML = `
+<div class="sort-controls">
+<div style="display: flex; align-items: center; gap: 20px;">
+${tabName === 'essa' && window.innerWidth > 768 ? `
+<div style="display: flex; align-items: center; gap: 15px;">
+<div style="display: flex; align-items: center; gap: 6px;">
+<label for="essa-amount-discount" style="font-size: 14px; color: #2c3e50; font-weight: 700;">금액할인:</label>
+<input type="text" id="essa-amount-discount" class="discount-input-pc" value="0" onchange="applyEssaDiscount()" oninput="formatAmountInput(this)" onfocus="selectAllOnFocus(this)" style="width: 120px; padding: 6px 8px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 14px; font-weight: 600; text-align: right;">
+<span style="font-size: 14px; font-weight: 700; color: #2c3e50;">원</span>
+</div>
+<div style="display: flex; align-items: center; gap: 6px;">
+<label for="essa-discount-rate" style="font-size: 14px; color: #2c3e50; font-weight: 700;">할인율:</label>
+<input type="number" id="essa-discount-rate" class="regional-discount-input-pc" value="0" min="0" max="100" step="1" onchange="applyEssaDiscount()" oninput="applyEssaDiscount()" style="width: 60px; padding: 6px 8px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 14px; font-weight: 600; text-align: center;">
+<span style="font-size: 14px; font-weight: 700; color: #2c3e50;">%</span>
+</div>
+</div>
+` : ''}
+<div style="display: flex; align-items: center; gap: 8px;">
+<label for="sortSelect-${tabName}">정렬:</label>
+<select id="sortSelect-${tabName}" onchange="handleSort(this.value, '${tabName}')">
+<option value="none" ${state[tabName].currentSort === 'none' ? 'selected' : ''}>기본</option>
+<option value="asc" ${state[tabName].currentSort === 'asc' ? 'selected' : ''}>가격 낮은순</option>
+<option value="desc" ${state[tabName].currentSort === 'desc' ? 'selected' : ''}>가격 높은순</option>
+</select>
+<button onclick="captureScreenshot('${tabName}')" style="padding:8px 16px;background:linear-gradient(135deg,#28a745 0%,#218838 100%);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-size:13px;box-shadow:0 2px 8px rgba(40,167,69,0.2);transition:all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">📷 스크린샷</button>
+</div>
+</div>
+</div>`;
+
+const displayColumns = CONFIG.DISPLAY_COLUMNS[tabName];
+let tableHTML = '<table><thead><tr>';
+
+displayColumns.forEach(col => {
+tableHTML += `<th>${col.label}</th>`;
+});
+tableHTML += '</tr></thead><tbody>';
+
+products.forEach((product, index) => {
+tableHTML += '<tr>';
+displayColumns.forEach(col => {
+let value = findColumnValue(product, col.keys) || '-';
+
+if (col.label === '수량' && tabName === 'ace') {
+// 수량 입력 필드
+value = `<input type="number" class="quantity-input" value="1" min="1" max="999" 
+onchange="updateQuantity(${index}, this.value, '${tabName}')" 
+oninput="updateQuantity(${index}, this.value, '${tabName}')">`;
+} else if (col.label === '품목 할인' && tabName === 'ace') {
+// ACE 탭 품목별 할인율 입력 필드
+value = `<div style="display:flex;align-items:center;justify-content:center;gap:2px;"><input type="number" class="individual-discount-input" value="0" min="0" max="100" step="1" data-index="${index}"
+onchange="updateIndividualDiscount(${index})" 
+oninput="updateIndividualDiscount(${index})"
+onfocus="selectAllOnFocus(this)"><span style="font-weight:700;font-size:13px;color:#495057;">%</span></div>`;
+} else if (col.label === '판매가') {
+const originalPrice = getPriceValue(product);
+const quantity = 1; // 기본 수량
+const totalPrice = originalPrice * quantity;
+
+if (tabName === 'ace') {
+value = `<span class="total-price" data-original="${originalPrice}" data-index="${index}">${formatPrice(totalPrice)}원</span>`;
+} else {
+value = formatPrice(value) + '원';
+}
+} else if (col.label === '행사가' && tabName === 'essa') {
+// ESSA 탭 행사가: (판매가 - 금액할인) * (1-할인율)
+const originalPrice = getPriceValue(product);
+value = `<span class="event-price" data-original="${originalPrice}" data-index="${index}">${formatPrice(originalPrice)}원</span>`;
+}
+
+const priceClass = (col.label === '판매가' || col.label === '행사가') ? ' class="price-value"' : '';
+const quantityClass = col.label === '수량' ? ' class="quantity-cell"' : '';
+const discountClass = col.label === '품목 할인' ? ' class="quantity-cell"' : '';
+const cellClass = priceClass || quantityClass || discountClass;
+tableHTML += `<td data-label="${col.label}"${cellClass}>${value}</td>`;
+});
+tableHTML += '</tr>';
+});
+
+if (products.length > 0) {
+const totalAmount = state[tabName].totalAmount;
+const colCount = displayColumns.length;
+const isMobile = window.innerWidth <= 768;
+
+if (isMobile) {
+if (tabName === 'ace') {
+// ACE 탭 모바일: 카드뷰는 테이블 외부에서 별도로 추가되므로 여기서는 아무것도 하지 않음
+// 기존 테이블 총합계 행을 추가하지 않음
+} else {
+// ESSA 탭 모바일: 총합계 행 제거 (행사가 열에 개별 할인 적용)
+}
+} else {
+if (tabName === 'ace') {
+// ACE 탭 PC: 할인율과 상품권 포함 총합계 (할인율 → 상품권 → 총합계 → 금액 순서)
+tableHTML += `<tr class="total-row">`;
+tableHTML += `<td class="discount-cell">`;
+tableHTML += `<div class="discount-container">`;
+tableHTML += `<label for="discount-rate-pc">할인율:</label>`;
+tableHTML += `<input type="number" id="discount-rate-pc" class="discount-input-pc" value="0" min="0" max="100" step="1" onchange="applyDiscount()" oninput="applyDiscount()">`;
+tableHTML += `<span>%</span>`;
+tableHTML += `</div>`;
+tableHTML += `</td>`;
+tableHTML += `<td class="discount-cell">`;
+tableHTML += `<div class="discount-container">`;
+tableHTML += `<label for="regional-discount-rate-pc">상품권:</label>`;
+tableHTML += `<input type="number" id="regional-discount-rate-pc" class="regional-discount-input-pc" value="0" min="0" max="100" step="1" onchange="applyDiscount()" oninput="applyDiscount()">`;
+tableHTML += `<span>%</span>`;
+tableHTML += `</div>`;
+tableHTML += `</td>`;
+tableHTML += `<td colspan="${colCount - 3}" class="total-label">총 합계</td>`;
+tableHTML += `<td class="total-amount">`;
+tableHTML += `<div class="total-price-container">`;
+tableHTML += `<span class="original-price" id="original-total-pc">${formatPrice(totalAmount)}원</span>`;
+tableHTML += `<span class="price-separator"> / </span>`;
+tableHTML += `<span class="final-price" id="final-total-pc">${formatPrice(totalAmount)}원</span>`;
+tableHTML += `<span class="price-separator"> / </span>`;
+tableHTML += `<span class="discount-rate-display" id="discount-rate-display-pc" style="color:#17a2b8;font-weight:800;font-size:16px;">0.0%</span>`;
+tableHTML += `</div>`;
+tableHTML += `</td>`;
+tableHTML += `</tr>`;
+} else {
+// ESSA 탭 PC: 총합계 행 제거 (행사가 열에 개별 할인 적용)
+}
+}
+}
+
+tableHTML += `</tbody></table>`;
+
+// 모바일 환경에서 할인율 카드뷰 추가 (ESSA, ACE 탭 모두)
+const isMobileCheck = window.innerWidth <= 768;
+if (isMobileCheck && products.length > 0) {
+const currentTotalAmount = state[tabName].totalAmount || 0;
+const cardClass = tabName === 'ace' ? 'ace-mobile-summary-card' : 'essa-mobile-summary-card';
+const discountRateId = tabName === 'ace' ? 'discount-rate' : 'essa-amount-discount-mobile';
+const regionalDiscountRateId = tabName === 'ace' ? 'regional-discount-rate' : 'essa-discount-rate-mobile';
+const originalTotalId = tabName === 'ace' ? 'original-total' : 'essa-original-total-mobile';
+const finalTotalId = tabName === 'ace' ? 'final-total' : 'essa-final-total-mobile';
+const applyFunction = tabName === 'ace' ? 'applyDiscount()' : 'applyEssaDiscount()';
+const resetDiscountFunction = tabName === 'ace' ? 'resetDiscountRate()' : 'resetEssaAmountDiscount()';
+const resetRegionalFunction = tabName === 'ace' ? 'resetRegionalDiscountRate()' : 'resetEssaDiscountRate()';
+
+tableHTML += `<div class="${cardClass}">`;
+tableHTML += `<div class="summary-row">`;
+if (tabName === 'ace') {
+    tableHTML += `<span class="summary-label">할인율</span>`;
+    tableHTML += `<div class="summary-input-group">`;
+    tableHTML += `<input type="number" id="${discountRateId}" class="summary-input" value="0" min="0" max="100" step="1" onchange="${applyFunction}" oninput="${applyFunction}" onfocus="selectAllOnFocus(this)" placeholder="0">`;
+    tableHTML += `<span class="summary-unit">%</span>`;
+} else {
+    tableHTML += `<span class="summary-label">금액할인</span>`;
+    tableHTML += `<div class="summary-input-group">`;
+    tableHTML += `<input type="text" id="${discountRateId}" class="summary-input" value="0" onchange="${applyFunction}" oninput="formatAmountInputMobile(this)" onfocus="selectAllOnFocus(this)" placeholder="0" style="width: 100px; text-align: right;">`;
+    tableHTML += `<span class="summary-unit">원</span>`;
+}
+tableHTML += `<button class="reset-button" onclick="${resetDiscountFunction}" title="초기화">리셋</button>`;
+tableHTML += `</div>`;
+tableHTML += `</div>`;
+tableHTML += `<div class="summary-row">`;
+if (tabName === 'ace') {
+    tableHTML += `<span class="summary-label">상품권</span>`;
+    tableHTML += `<div class="summary-input-group">`;
+    tableHTML += `<input type="number" id="${regionalDiscountRateId}" class="summary-input" value="0" min="0" max="100" step="1" onchange="${applyFunction}" oninput="${applyFunction}" onfocus="selectAllOnFocus(this)" placeholder="0">`;
+    tableHTML += `<span class="summary-unit">%</span>`;
+} else {
+    tableHTML += `<span class="summary-label">할인율</span>`;
+    tableHTML += `<div class="summary-input-group">`;
+    tableHTML += `<input type="text" id="${regionalDiscountRateId}" class="summary-input" value="0" onchange="${applyFunction}" oninput="formatDiscountRateInput(this)" onfocus="selectAllOnFocus(this)" placeholder="0" style="width: 85px; text-align: right;">`;
+    tableHTML += `<span class="summary-unit">%</span>`;
+}
+tableHTML += `<button class="reset-button" onclick="${resetRegionalFunction}" title="초기화">리셋</button>`;
+tableHTML += `</div>`;
+tableHTML += `</div>`;
+if (tabName === 'ace') {
+    tableHTML += `<div class="summary-row">`;
+    tableHTML += `<span class="summary-label">총 합계</span>`;
+    tableHTML += `<div class="summary-total-container">`;
+    tableHTML += `<span class="summary-original-price" id="${originalTotalId}">${formatPrice(currentTotalAmount)}원</span>`;
+    tableHTML += `<span class="summary-separator"> / </span>`;
+    tableHTML += `<span class="summary-final-price" id="${finalTotalId}">${formatPrice(currentTotalAmount)}원</span>`;
+    tableHTML += `<span class="summary-separator"> / </span>`;
+    tableHTML += `<span class="discount-rate-display" id="discount-rate-display-mobile" style="color:#17a2b8;font-weight:800;font-size:13px;">0.0%</span>`;
+    tableHTML += `</div>`;
+    tableHTML += `</div>`;
+}
+tableHTML += `</div>`;
+}
+
+tableHTML += `<div style="margin-top: 10px; color: #666; font-size: 14px; text-align: center;">`;
+tableHTML += `총 ${products.length}개의 제품이 검색되었습니다.</div>`;
+
+document.getElementById(`results-container-${tabName}`).innerHTML = sortHTML + tableHTML;
+}
+
+function handleSort(sortType, tabName) {
+if (state[tabName].currentProducts.length === 0) return;
+
+state[tabName].currentSort = sortType;
+let sortedProducts = [...state[tabName].currentProducts];
+
+if (sortType === 'asc' || sortType === 'desc') {
+sortedProducts.sort((a, b) => {
+const priceA = getPriceValue(a);
+const priceB = getPriceValue(b);
+return sortType === 'asc' ? priceA - priceB : priceB - priceA;
+});
+}
+
+displayResults(sortedProducts, tabName);
+}
+
+function resetForm(tabName) {
+const fieldMapping = CONFIG.FIELD_MAPPING[tabName];
+Object.keys(fieldMapping).forEach(key => {
+const element = document.getElementById(`${tabName}_${key}`);
+if (element) {
+element.value = '';
+}
+});
+
+document.getElementById(`results-container-${tabName}`).innerHTML = '';
+state[tabName].currentProducts = [];
+state[tabName].currentSort = 'none';
+state[tabName].totalAmount = 0;
+if (tabName === 'ace') {
+state.ace.individualDiscountedTotal = 0;
+}
+
+if (tabName === 'ace') {
+resetDependentOptions(tabName);
+} else {
+resetEssaDependentOptions();
+}
+}
+
+// 수량 변경 함수
+function updateQuantity(index, quantity, tabName) {
+if (tabName !== 'ace') return;
+
+const qty = parseInt(quantity) || 1;
+const priceElement = document.querySelector(`.total-price[data-index="${index}"]`);
+
+if (priceElement) {
+const originalPrice = parseInt(priceElement.getAttribute('data-original')) || 0;
+const totalPrice = originalPrice * qty;
+priceElement.textContent = formatPrice(totalPrice) + '원';
+}
+
+// 총합계 재계산
+calculateAceTotal();
+}
+
+// ACE 탭 개별 할인율 변경 함수 (판매가 변동 없이 총합계에만 반영)
+function updateIndividualDiscount(index) {
+// 판매가는 변경하지 않고 총합계만 재계산
+calculateAceTotal();
+}
+
+// ACE 탭 총합계 계산 (품목별 할인율은 총합계 할인가에만 반영)
+function calculateAceTotal() {
+let baseTotal = 0;       // 할인 전 합계
+let discountedTotal = 0; // 품목별 할인 적용 합계
+const priceElements = document.querySelectorAll('.total-price[data-index]');
+
+priceElements.forEach(element => {
+const originalPrice = parseInt(element.getAttribute('data-original')) || 0;
+const row = element.closest('tr');
+const quantityInput = row.querySelector('.quantity-input');
+const discountInput = row.querySelector('.individual-discount-input');
+const quantity = parseInt(quantityInput?.value) || 1;
+const individualDiscount = parseFloat(discountInput?.value) || 0;
+const itemBase = originalPrice * quantity;
+baseTotal += itemBase;
+discountedTotal += itemBase * (1 - individualDiscount / 100);
+});
+
+// state 업데이트 (할인 전 합계)
+state.ace.totalAmount = baseTotal;
+state.ace.individualDiscountedTotal = discountedTotal;
+
+// 전체 할인율/상품권 적용하여 최종 금액 계산
+applyDiscount();
+}
+
+// 할인율 적용 함수
+function applyDiscount() {
+const baseTotal = state.ace.totalAmount || 0;
+const individualDiscountedTotal = state.ace.individualDiscountedTotal !== undefined ? state.ace.individualDiscountedTotal : baseTotal;
+const discountRateMobile = document.getElementById('discount-rate');
+const discountRatePC = document.getElementById('discount-rate-pc');
+const regionalDiscountRateMobile = document.getElementById('regional-discount-rate');
+const regionalDiscountRatePC = document.getElementById('regional-discount-rate-pc');
+
+let discountRate = 0;
+let regionalDiscountRate = 0;
+
+// 할인율 처리
+if (discountRateMobile) {
+discountRate = parseFloat(discountRateMobile.value) || 0;
+if (discountRatePC) discountRatePC.value = discountRate;
+} else if (discountRatePC) {
+discountRate = parseFloat(discountRatePC.value) || 0;
+if (discountRateMobile) discountRateMobile.value = discountRate;
+}
+
+// 상품권율 처리
+if (regionalDiscountRateMobile) {
+regionalDiscountRate = parseFloat(regionalDiscountRateMobile.value) || 0;
+if (regionalDiscountRatePC) regionalDiscountRatePC.value = regionalDiscountRate;
+} else if (regionalDiscountRatePC) {
+regionalDiscountRate = parseFloat(regionalDiscountRatePC.value) || 0;
+if (regionalDiscountRateMobile) regionalDiscountRateMobile.value = regionalDiscountRate;
+}
+
+// 할인 적용: 품목별 할인 적용 합계 → 전체 할인율 → 상품권
+const afterDiscountTotal = individualDiscountedTotal * (1 - discountRate / 100);
+const finalDiscountedTotal = afterDiscountTotal * (1 - regionalDiscountRate / 100);
+
+// 천단위 이하 ROUNDUP 적용
+const finalTotal = Math.ceil(finalDiscountedTotal / 1000) * 1000;
+
+// 판매가 합계 (원래 가격) 업데이트
+const originalTotalMobile = document.getElementById('original-total');
+const originalTotalPC = document.getElementById('original-total-pc');
+if (originalTotalMobile) originalTotalMobile.textContent = formatPrice(baseTotal) + '원';
+if (originalTotalPC) originalTotalPC.textContent = formatPrice(baseTotal) + '원';
+
+// 할인가 (최종 가격) 업데이트
+const finalTotalMobile = document.getElementById('final-total');
+const finalTotalPC = document.getElementById('final-total-pc');
+if (finalTotalMobile) finalTotalMobile.textContent = formatPrice(finalTotal) + '원';
+if (finalTotalPC) finalTotalPC.textContent = formatPrice(finalTotal) + '원';
+
+// 할인율 표기 업데이트
+const totalDiscountRate = baseTotal > 0 ? ((1 - finalTotal / baseTotal) * 100) : 0;
+const rateText = totalDiscountRate > 0 ? totalDiscountRate.toFixed(1) + '%' : '0.0%';
+const rateDisplayPC = document.getElementById('discount-rate-display-pc');
+const rateDisplayMobile = document.getElementById('discount-rate-display-mobile');
+if (rateDisplayPC) rateDisplayPC.textContent = rateText;
+if (rateDisplayMobile) rateDisplayMobile.textContent = rateText;
+
+// 할인 정보 표시
+updateDiscountInfo(baseTotal, discountRate, regionalDiscountRate, finalTotal);
+}
+
+// 할인 정보 업데이트
+function updateDiscountInfo(baseTotal, discountRate, regionalDiscountRate, finalTotal) {
+if (discountRate > 0 || regionalDiscountRate > 0) {
+const totalDiscountAmount = baseTotal - finalTotal;
+console.log(`할인 적용: 할인율 ${discountRate}%, 상품권 ${regionalDiscountRate}% (총 ${formatPrice(Math.round(totalDiscountAmount))}원 할인)`);
+}
+}
+
+// ESSA 탭 할인율 적용 함수
+function applyEssaDiscount() {
+const amountDiscountPC = document.getElementById('essa-amount-discount');
+const amountDiscountMobile = document.getElementById('essa-amount-discount-mobile');
+const discountRatePC = document.getElementById('essa-discount-rate');
+const discountRateMobile = document.getElementById('essa-discount-rate-mobile');
+
+let amountDiscount = 0;
+let discountRate = 0;
+
+// 금액할인 처리 (PC와 모바일 동기화, 천단위 표기 값 파싱)
+if (amountDiscountPC && amountDiscountPC.value !== undefined) {
+amountDiscount = parseAmountValue(amountDiscountPC.value);
+if (amountDiscountMobile) {
+amountDiscountMobile.value = amountDiscount.toLocaleString('ko-KR');
+}
+} else if (amountDiscountMobile && amountDiscountMobile.value !== undefined) {
+amountDiscount = parseAmountValue(amountDiscountMobile.value);
+if (amountDiscountPC) {
+amountDiscountPC.value = amountDiscount.toLocaleString('ko-KR');
+}
+}
+
+// 할인율 처리 (PC와 모바일 동기화)
+if (discountRatePC && discountRatePC.value !== undefined) {
+discountRate = parseFloat(discountRatePC.value) || 0;
+if (discountRateMobile) {
+discountRateMobile.value = discountRate.toString();
+}
+} else if (discountRateMobile && discountRateMobile.value !== undefined) {
+discountRate = parseDiscountRateValue(discountRateMobile.value);
+if (discountRatePC) {
+discountRatePC.value = discountRate;
+}
+}
+
+// 모든 행사가 업데이트
+const eventPriceElements = document.querySelectorAll('.event-price[data-index]');
+eventPriceElements.forEach(element => {
+const originalPrice = parseInt(element.getAttribute('data-original')) || 0;
+
+// 행사가 산출수식: (판매가 - 금액할인) * (1-할인율)
+const afterAmountDiscount = Math.max(0, originalPrice - amountDiscount);
+const discountedPrice = afterAmountDiscount * (1 - discountRate / 100);
+
+// 1000단위 ROUNDUP 처리
+const finalPrice = Math.ceil(discountedPrice / 1000) * 1000;
+
+element.textContent = formatPrice(finalPrice) + '원';
+});
+
+console.log(`ESSA 할인 적용: 금액할인 ${amountDiscount.toLocaleString('ko-KR')}원, 할인율 ${discountRate}%`);
+}
+
+// 할인율 리셋 함수
+function resetDiscountRate() {
+const discountRateMobile = document.getElementById('discount-rate');
+const discountRatePC = document.getElementById('discount-rate-pc');
+
+if (discountRateMobile) {
+discountRateMobile.value = 0;
+}
+if (discountRatePC) {
+discountRatePC.value = 0;
+}
+
+// 할인 재계산
+applyDiscount();
+}
+
+// 상품권 리셋 함수
+function resetRegionalDiscountRate() {
+const regionalDiscountRateMobile = document.getElementById('regional-discount-rate');
+const regionalDiscountRatePC = document.getElementById('regional-discount-rate-pc');
+
+if (regionalDiscountRateMobile) {
+regionalDiscountRateMobile.value = 0;
+}
+if (regionalDiscountRatePC) {
+regionalDiscountRatePC.value = 0;
+}
+
+// 할인 재계산
+applyDiscount();
+}
+
+// ESSA 탭 금액할인 리셋 함수
+function resetEssaAmountDiscount() {
+const amountDiscountPC = document.getElementById('essa-amount-discount');
+const amountDiscountMobile = document.getElementById('essa-amount-discount-mobile');
+
+if (amountDiscountPC) {
+amountDiscountPC.value = '0';
+}
+if (amountDiscountMobile) {
+amountDiscountMobile.value = '0';
+}
+
+// 할인 재계산
+applyEssaDiscount();
+}
+
+// ESSA 탭 할인율 리셋 함수
+function resetEssaDiscountRate() {
+const discountRatePC = document.getElementById('essa-discount-rate');
+const discountRateMobile = document.getElementById('essa-discount-rate-mobile');
+
+if (discountRatePC) {
+discountRatePC.value = 0;
+}
+if (discountRateMobile) {
+discountRateMobile.value = 0;
+}
+
+// 할인 재계산
+applyEssaDiscount();
+}
+
+// 입력 필드 포커스 시 전체 선택 함수
+function selectAllOnFocus(element) {
+element.select();
+}
+
+// 금액 입력 필드 천단위 표기 함수 (PC용)
+function formatAmountInput(element) {
+let value = element.value.replace(/[^\d]/g, ''); // 숫자만 추출
+if (value === '') {
+element.value = '0';
+} else {
+let numValue = parseInt(value);
+element.value = numValue.toLocaleString('ko-KR');
+}
+applyEssaDiscount();
+}
+
+// 금액 입력 필드 천단위 표기 함수 (모바일용)
+function formatAmountInputMobile(element) {
+let value = element.value.replace(/[^\d]/g, ''); // 숫자만 추출
+if (value === '') {
+element.value = '0';
+} else {
+let numValue = parseInt(value);
+element.value = numValue.toLocaleString('ko-KR');
+}
+applyEssaDiscount();
+}
+
+// 할인율 입력 필드 포맷팅 함수 (모바일용)
+function formatDiscountRateInput(element) {
+let value = element.value.replace(/[^\d.]/g, ''); // 숫자와 소수점만 추출
+if (value === '') {
+element.value = '0';
+} else {
+let numValue = parseFloat(value);
+if (numValue > 100) numValue = 100; // 최대 100% 제한
+element.value = numValue.toString();
+}
+applyEssaDiscount();
+}
+
+// 천단위 표기된 값을 숫자로 변환하는 함수
+function parseAmountValue(value) {
+if (typeof value === 'string') {
+return parseInt(value.replace(/[^\d]/g, '')) || 0;
+}
+return parseInt(value) || 0;
+}
+
+// 할인율 값을 숫자로 변환하는 함수
+function parseDiscountRateValue(value) {
+if (typeof value === 'string') {
+return parseFloat(value.replace(/[^\d.]/g, '')) || 0;
+}
+return parseFloat(value) || 0;
+}
+
+
+
+// 스크린샷 캡처 함수 (검색 결과 영역만 캡처)
+function captureScreenshot(tabName) {
+const resultsContainer = document.getElementById(`results-container-${tabName}`);
+if (!resultsContainer || resultsContainer.innerHTML.trim() === '') {
+showStatus('캡처할 검색 결과가 없습니다.', 'error');
+return;
+}
+
+showStatus('스크린샷 캡처 중...', 'info');
+
+html2canvas(resultsContainer, {
+scale: 2,
+useCORS: true,
+backgroundColor: '#ffffff',
+logging: false
+}).then(canvas => {
+// 20% 축소 (80% 크기로 리사이즈)
+const scaleFactor = 0.8;
+const resizedCanvas = document.createElement('canvas');
+resizedCanvas.width = Math.round(canvas.width * scaleFactor);
+resizedCanvas.height = Math.round(canvas.height * scaleFactor);
+const ctx = resizedCanvas.getContext('2d');
+ctx.drawImage(canvas, 0, 0, resizedCanvas.width, resizedCanvas.height);
+
+const link = document.createElement('a');
+const now = new Date();
+const dateStr = now.getFullYear().toString() +
+String(now.getMonth() + 1).padStart(2, '0') +
+String(now.getDate()).padStart(2, '0') + '_' +
+String(now.getHours()).padStart(2, '0') +
+String(now.getMinutes()).padStart(2, '0') +
+String(now.getSeconds()).padStart(2, '0');
+link.download = `PRICE_LIST_${tabName.toUpperCase()}_${dateStr}.png`;
+link.href = resizedCanvas.toDataURL('image/png');
+link.click();
+showStatus('스크린샷이 저장되었습니다.', 'success');
+}).catch(error => {
+showStatus('스크린샷 캡처 실패: ' + error.message, 'error');
+});
+}
+
+// 전역 함수 노출
+window.switchTab = switchTab;
+window.searchProducts = searchProducts;
+window.resetForm = resetForm;
+window.handleSort = handleSort;
+window.updateDependentOptions = updateDependentOptions;
+window.updateEssaDependentOptions = updateEssaDependentOptions;
+window.updateQuantity = updateQuantity;
+window.updateIndividualDiscount = updateIndividualDiscount;
+window.applyDiscount = applyDiscount;
+window.applyEssaDiscount = applyEssaDiscount;
+window.resetDiscountRate = resetDiscountRate;
+window.resetRegionalDiscountRate = resetRegionalDiscountRate;
+window.resetEssaAmountDiscount = resetEssaAmountDiscount;
+window.resetEssaDiscountRate = resetEssaDiscountRate;
+window.selectAllOnFocus = selectAllOnFocus;
+window.formatAmountInput = formatAmountInput;
+window.formatAmountInputMobile = formatAmountInputMobile;
+window.formatDiscountRateInput = formatDiscountRateInput;
+window.captureScreenshot = captureScreenshot;
+
+// GitHub 리포지토리 테스트 함수
+async function testGitHubRepository() {
+const repoUrl = `https://api.github.com/repos/${CONFIG.GITHUB.username}/${CONFIG.GITHUB.repository}`;
+console.log('🔍 GitHub 리포지토리 확인:', repoUrl);
+
+try {
+const response = await fetch(repoUrl);
+if (response.ok) {
+const repoInfo = await response.json();
+console.log('✅ 리포지토리 존재:', repoInfo.name);
+console.log('� 문리포지토리 정보:', {
+name: repoInfo.name,
+private: repoInfo.private,
+default_branch: repoInfo.default_branch,
+html_url: repoInfo.html_url
+});
+return true;
+} else {
+console.log('❌ 리포지토리 접근 실패:', response.status);
+return false;
+}
+} catch (error) {
+console.log('💥 리포지토리 확인 오류:', error);
+return false;
+}
+}
+
+// 초기화
+document.addEventListener('DOMContentLoaded', function() {
+console.log('🚀 페이지 로드 완료, 초기화 시작');
+
+// GitHub 리포지토리 테스트
+testGitHubRepository().then(exists => {
+if (exists) {
+console.log('✅ GitHub 리포지토리 확인됨');
+} else {
+console.log('❌ GitHub 리포지토리 문제 있음');
+}
+});
+
+initUpload();
+});
+
+// 페이지가 이미 로드된 경우를 위한 백업
+if (document.readyState === 'loading') {
+console.log('📄 문서 로딩 중...');
+} else {
+console.log('📄 문서 이미 로드됨, 즉시 초기화');
+testGitHubRepository();
+initUpload();
+}
+</script>
+</body>
+</html>
